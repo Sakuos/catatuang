@@ -25,6 +25,66 @@ export function buildCSV(transactions) {
   return [header.map(cell).join(','), ...rows].join('\r\n')
 }
 
+// Parse teks CSV (format hasil export kita) menjadi daftar transaksi.
+// Menangani sel berkutip & escape "" . Baris header & baris rusak dilewati.
+export function parseCSV(text) {
+  const bersih = text.replace(/^﻿/, '') // buang BOM bila ada
+  const baris = bersih.split(/\r?\n/).filter((b) => b.trim() !== '')
+  const hasil = []
+
+  for (let i = 0; i < baris.length; i++) {
+    const kolom = pecahBarisCSV(baris[i])
+    if (kolom.length < 4) continue
+    const [tanggal, jenis, kategori, nominal, catatan] = kolom
+
+    // Lewati baris header.
+    if (i === 0 && tanggal.toLowerCase() === 'tanggal') continue
+
+    const amount = Number(String(nominal).replace(/[^\d.-]/g, ''))
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(tanggal) || !amount) continue
+
+    hasil.push({
+      date: tanggal,
+      type: jenis.toLowerCase().startsWith('pemasukan') ? 'income' : 'expense',
+      category: kategori || 'lainnya',
+      amount,
+      note: catatan || '',
+    })
+  }
+  return hasil
+}
+
+// Pecah satu baris CSV menjadi array sel (menghormati tanda kutip).
+function pecahBarisCSV(baris) {
+  const out = []
+  let cur = ''
+  let inQuote = false
+  for (let i = 0; i < baris.length; i++) {
+    const c = baris[i]
+    if (inQuote) {
+      if (c === '"') {
+        if (baris[i + 1] === '"') {
+          cur += '"'
+          i++
+        } else {
+          inQuote = false
+        }
+      } else {
+        cur += c
+      }
+    } else if (c === '"') {
+      inQuote = true
+    } else if (c === ',') {
+      out.push(cur)
+      cur = ''
+    } else {
+      cur += c
+    }
+  }
+  out.push(cur)
+  return out.map((s) => s.trim())
+}
+
 // Nama file dengan tanggal hari ini, mis. catatuang-2026-07-14.csv
 function namaFile() {
   const d = new Date()

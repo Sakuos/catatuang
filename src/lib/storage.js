@@ -12,6 +12,27 @@
 const STORAGE_KEY = 'catatuang.transactions'
 const BUDGET_KEY = 'catatuang.budget'
 const DISMISS_KEY = 'catatuang.dismissedUpdate'
+const THEME_KEY = 'catatuang.theme'
+const GOAL_KEY = 'catatuang.goal'
+
+// --- Tema (dark / light) ---
+export function getTheme() {
+  return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'
+}
+
+export function setTheme(theme) {
+  localStorage.setItem(THEME_KEY, theme === 'dark' ? 'dark' : 'light')
+}
+
+// --- Target menabung (satu angka) ---
+export function getGoal() {
+  const n = Number(localStorage.getItem(GOAL_KEY))
+  return n > 0 ? n : 0
+}
+
+export function setGoal(amount) {
+  localStorage.setItem(GOAL_KEY, String(Number(amount) || 0))
+}
 
 // --- Banner update: versi yang sudah ditutup pengguna ---
 // Supaya banner tak muncul lagi untuk versi yang sama, tapi tetap
@@ -97,4 +118,31 @@ export function updateTransaction(id, changes) {
 export function removeTransaction(id) {
   const transactions = getTransactions().filter((t) => t.id !== id)
   saveAll(transactions)
+}
+
+// Impor banyak transaksi (dari CSV). Anti-duplikat: baris yang identik
+// (tanggal+jenis+nominal+kategori+catatan) tidak ditambahkan dua kali.
+// Mengembalikan jumlah transaksi yang benar-benar ditambahkan.
+export function importTransactions(list) {
+  const transactions = getTransactions()
+  const kunci = (t) => `${t.date}|${t.type}|${t.amount}|${t.category}|${t.note || ''}`
+  const sudahAda = new Set(transactions.map(kunci))
+
+  let ditambah = 0
+  for (const input of list) {
+    const tx = {
+      id: makeId(),
+      type: input.type,
+      amount: Number(input.amount),
+      category: input.category,
+      note: input.note || '',
+      date: input.date,
+    }
+    if (sudahAda.has(kunci(tx))) continue
+    sudahAda.add(kunci(tx))
+    transactions.push(tx)
+    ditambah++
+  }
+  saveAll(transactions)
+  return ditambah
 }

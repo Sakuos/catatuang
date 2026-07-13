@@ -30,7 +30,10 @@ APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
 - 📈 Grafik pengeluaran per kategori
 - 🎯 Budget bulanan dengan peringatan bila mendekati/melewati batas
 - 🔍 Cari & filter transaksi (per jenis / kata kunci)
-- 📤 Export semua transaksi ke CSV (buka di Excel/Spreadsheet)
+- 📤 Export & 📥 Import transaksi via CSV (backup / pindah HP)
+- 🏆 Target menabung dengan progress dari saldo
+- 📊 Statistik bulan: rata-rata/hari, transaksi terbesar, jumlah transaksi
+- 🌙 Mode gelap (dark mode)
 - 🔔 Notifikasi otomatis saat ada versi baru (banner "Update" di dalam app)
 - 📅 Pindah antar bulan
 - 🏷️ Kategori dengan ikon (Makan, Transport, Gaji, dll.)
