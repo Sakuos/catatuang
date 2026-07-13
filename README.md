@@ -8,6 +8,20 @@ Dibuat dengan **React + Vite** lalu dibungkus jadi APK dengan **Capacitor**.
 
 ---
 
+## 📲 Download & Install (untuk pengguna)
+
+APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
+
+1. Buka tab **Releases** (di kanan halaman repo, atau klik link di atas)
+2. Di rilis paling atas, bagian **Assets**, unduh **`CatatUang.apk`**
+3. Buka file-nya di HP → **Install**. Jika diminta, izinkan "Install dari sumber tak dikenal"
+
+> 🔄 **Cara update:** cukup ulangi langkah di atas dengan rilis terbaru. Data lama kamu
+> tetap aman (tersimpan di HP). Android akan meminta konfirmasi setiap update — ini normal
+> untuk aplikasi di luar Play Store.
+
+---
+
 ## ✨ Fitur
 
 - ➕ Tambah transaksi: pemasukan / pengeluaran, nominal, kategori, catatan, tanggal

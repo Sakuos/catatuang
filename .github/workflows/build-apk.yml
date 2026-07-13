@@ -12,6 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Izin menulis rilis (dibutuhkan untuk membuat GitHub Release).
+    permissions:
+      contents: write
+
     steps:
       # 1. Ambil kode dari repo
       - name: Checkout kode
@@ -54,10 +58,26 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleDebug
 
-      # 9. Unggah APK sebagai artifact yang bisa diunduh
-      - name: Upload APK
+      # 9. Ubah nama APK jadi ramah (CatatUang.apk)
+      - name: Ganti nama APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk CatatUang.apk
+
+      # 10. Unggah APK sebagai artifact (cadangan, bisa diunduh dari halaman run)
+      - name: Upload APK (artifact)
         uses: actions/upload-artifact@v4
         with:
           name: CatatUang-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: CatatUang.apk
           if-no-files-found: error
+
+      # 11. Terbitkan GitHub Release dengan APK terlampir.
+      #     Hanya jalan untuk push ke main (bukan saat dites manual biasa).
+      #     Tiap build dapat nomor versi otomatis: v1.0.<nomor-build>
+      - name: Terbitkan Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: CatatUang v1.0.${{ github.run_number }}
+          files: CatatUang.apk
+          generate_release_notes: true
