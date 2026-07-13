@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CatatUang</string>
+    <string name="title_activity_main">CatatUang</string>
+    <string name="package_name">com.bayu.catatuang</string>
+    <string name="custom_url_scheme">com.bayu.catatuang</string>
+</resources>

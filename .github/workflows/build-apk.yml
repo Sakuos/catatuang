@@ -1,0 +1,63 @@
+name: Build APK
+
+# Kapan workflow ini jalan:
+# - setiap push ke branch main
+# - atau ditekan manual dari tab "Actions" (tombol "Run workflow")
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Ambil kode dari repo
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      # 2. Siapkan Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build web app (menghasilkan folder dist/)
+      - name: Build web
+        run: npm run build
+
+      # 5. Siapkan Java (dibutuhkan Android/Gradle)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 6. Siapkan Android SDK
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # 7. Salin hasil build web ke project Android
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      # 8. Build APK (versi debug — tidak perlu keystore)
+      - name: Build APK debug
+        run: |
+          cd android
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
+
+      # 9. Unggah APK sebagai artifact yang bisa diunduh
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CatatUang-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

@@ -1,0 +1,444 @@
+/* ============================================================
+   CatatUang — gaya mobile-first
+   Palet: teal (utama), hijau (pemasukan), merah (pengeluaran)
+   ============================================================ */
+
+:root {
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --primary: #0f766e;
+  --primary-dark: #115e59;
+  --income: #16a34a;
+  --expense: #dc2626;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 16px;
+  --shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  padding: calc(env(safe-area-inset-top) + 18px) 20px 18px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ---------- Main ---------- */
+.app-main {
+  flex: 1;
+  padding: 16px 16px 96px;
+}
+
+/* ---------- Month picker ---------- */
+.month-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.month-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--primary);
+  cursor: pointer;
+}
+.month-label {
+  font-weight: 600;
+  font-size: 16px;
+  min-width: 130px;
+  text-align: center;
+}
+
+/* ---------- Dashboard ---------- */
+.dashboard {
+  margin-bottom: 22px;
+}
+.balance-card {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+.balance-label {
+  font-size: 13px;
+  opacity: 0.9;
+}
+.balance-value {
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.balance-value.negative {
+  color: #fecaca;
+}
+.summary-row {
+  display: flex;
+  gap: 12px;
+}
+.summary-card {
+  flex: 1;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.summary-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.summary-value {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.summary-card.income .summary-value {
+  color: var(--income);
+}
+.summary-card.expense .summary-value {
+  color: var(--expense);
+}
+
+/* ---------- Section title ---------- */
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 6px 4px 10px;
+}
+
+/* ---------- Transaction list ---------- */
+.tx-group {
+  margin-bottom: 16px;
+}
+.tx-date {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 4px 6px;
+}
+.tx-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.tx-emoji {
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.tx-info {
+  flex: 1;
+  min-width: 0;
+}
+.tx-category {
+  font-weight: 600;
+  font-size: 15px;
+}
+.tx-note {
+  font-size: 13px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tx-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.tx-amount {
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.tx-amount.income {
+  color: var(--income);
+}
+.tx-amount.expense {
+  color: var(--expense);
+}
+.tx-delete {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 2px;
+}
+
+/* ---------- Empty state ---------- */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 20px;
+}
+.empty-emoji {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+.empty p {
+  margin: 4px 0;
+}
+.empty-hint {
+  font-size: 13px;
+}
+
+/* ---------- Floating action button ---------- */
+.fab {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 20px);
+  right: 50%;
+  transform: translateX(230px);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(15, 118, 110, 0.45);
+  cursor: pointer;
+  z-index: 20;
+}
+/* Di layar sempit, tempel FAB ke kanan layar */
+@media (max-width: 520px) {
+  .fab {
+    right: 20px;
+    transform: none;
+  }
+}
+
+/* ---------- Bottom sheet (form) ---------- */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 30;
+}
+.sheet {
+  background: var(--card);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 18px calc(env(safe-area-inset-bottom) + 20px);
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: slideUp 0.22s ease-out;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.sheet-handle {
+  width: 42px;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  margin: 4px auto 12px;
+}
+.sheet-title {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+/* ---------- Form ---------- */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 14px 0 6px;
+}
+.type-toggle {
+  display: flex;
+  gap: 8px;
+  background: var(--bg);
+  padding: 4px;
+  border-radius: 12px;
+}
+.type-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  border-radius: 9px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.type-btn.active-expense {
+  background: var(--expense);
+  color: #fff;
+}
+.type-btn.active-income {
+  background: var(--income);
+  color: #fff;
+}
+.amount-input {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 0 14px;
+}
+.amount-prefix {
+  color: var(--muted);
+  font-weight: 600;
+  margin-right: 8px;
+}
+.amount-input input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 14px 0;
+  font-size: 22px;
+  font-weight: 700;
+  outline: none;
+  color: var(--text);
+  width: 100%;
+}
+.text-input {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 15px;
+  outline: none;
+  color: var(--text);
+  width: 100%;
+}
+.text-input:focus {
+  border-color: var(--primary);
+}
+
+/* ---------- Category chips ---------- */
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+.chip-emoji {
+  font-size: 16px;
+}
+.chip-active {
+  border-color: var(--primary);
+  background: #ccfbf1;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+/* ---------- Actions ---------- */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+.btn {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-ghost {
+  background: var(--bg);
+  color: var(--muted);
+}
+.error-text {
+  color: var(--expense);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 14px 0 calc(env(safe-area-inset-bottom) + 14px);
+}

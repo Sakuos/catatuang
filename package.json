@@ -1,0 +1,27 @@
+{
+  "name": "catatuang",
+  "version": "1.0.0",
+  "description": "CatatUang - Aplikasi pencatat keuangan harian (offline, Android)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android"
+  },
+  "keywords": ["keuangan", "finance", "expense-tracker", "capacitor", "android"],
+  "author": "Bayu",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2"
+  }
+}
