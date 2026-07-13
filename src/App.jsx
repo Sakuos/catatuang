@@ -176,7 +176,10 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>💰 CatatUang</h1>
+        <div className="app-brand">
+          <img className="app-logo" src="./favicon.png" alt="Logo CatatUang" />
+          <h1>CatatUang</h1>
+        </div>
         <button
           type="button"
           className="theme-toggle"

@@ -68,6 +68,16 @@ body {
   align-items: center;
   justify-content: space-between;
 }
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+}
 .app-header h1 {
   margin: 0;
   font-size: 22px;
