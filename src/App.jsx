@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Dashboard from './components/Dashboard'
 import MonthPicker from './components/MonthPicker'
 import TransactionList from './components/TransactionList'
@@ -6,6 +6,7 @@ import TransactionForm from './components/TransactionForm'
 import BudgetCard from './components/BudgetCard'
 import CategoryChart from './components/CategoryChart'
 import FilterBar from './components/FilterBar'
+import UpdateBanner from './components/UpdateBanner'
 import {
   getTransactions,
   addTransaction,
@@ -13,10 +14,13 @@ import {
   removeTransaction,
   getBudget,
   setBudget,
+  getDismissedVersion,
+  setDismissedVersion,
 } from './lib/storage'
 import { bulanIni, bulanDari } from './lib/format'
 import { cariKategori } from './lib/categories'
 import { exportCSV } from './lib/export'
+import { checkForUpdate } from './lib/update'
 
 export default function App() {
   // Sumber kebenaran: daftar transaksi diambil dari lapisan data.
@@ -30,6 +34,23 @@ export default function App() {
 
   // 'sheet' = form melayang. null = tertutup, {} = tambah, {tx} = edit.
   const [sheet, setSheet] = useState(null)
+
+  // Info update (banner "versi baru"). null = tidak ada.
+  const [update, setUpdate] = useState(null)
+
+  // Cek update sekali saat app dibuka.
+  useEffect(() => {
+    checkForUpdate().then((info) => {
+      if (info && info.version !== getDismissedVersion()) {
+        setUpdate(info)
+      }
+    })
+  }, [])
+
+  function dismissUpdate() {
+    if (update) setDismissedVersion(update.version)
+    setUpdate(null)
+  }
 
   // Muat ulang state dari penyimpanan setiap ada perubahan data.
   function refresh() {
@@ -93,6 +114,8 @@ export default function App() {
       <header className="app-header">
         <h1>💰 CatatUang</h1>
       </header>
+
+      {update && <UpdateBanner info={update} onDismiss={dismissUpdate} />}
 
       <main className="app-main">
         <MonthPicker value={bulan} onChange={setBulan} />

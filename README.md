@@ -31,6 +31,7 @@ APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
 - 🎯 Budget bulanan dengan peringatan bila mendekati/melewati batas
 - 🔍 Cari & filter transaksi (per jenis / kata kunci)
 - 📤 Export semua transaksi ke CSV (buka di Excel/Spreadsheet)
+- 🔔 Notifikasi otomatis saat ada versi baru (banner "Update" di dalam app)
 - 📅 Pindah antar bulan
 - 🏷️ Kategori dengan ikon (Makan, Transport, Gaji, dll.)
 - 💾 Data tersimpan di HP (offline, privat, tanpa login)

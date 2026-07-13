@@ -33,8 +33,12 @@ jobs:
         run: npm ci
 
       # 4. Build web app (menghasilkan folder dist/)
+      #    Suntik nomor versi ke app agar cocok dengan tag release
+      #    (v1.0.<nomor-build>) — dipakai fitur "cek versi baru".
       - name: Build web
         run: npm run build
+        env:
+          VITE_APP_VERSION: 1.0.${{ github.run_number }}
 
       # 5. Siapkan Java (dibutuhkan Android/Gradle)
       - name: Setup Java

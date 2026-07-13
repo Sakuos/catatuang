@@ -11,6 +11,18 @@
 
 const STORAGE_KEY = 'catatuang.transactions'
 const BUDGET_KEY = 'catatuang.budget'
+const DISMISS_KEY = 'catatuang.dismissedUpdate'
+
+// --- Banner update: versi yang sudah ditutup pengguna ---
+// Supaya banner tak muncul lagi untuk versi yang sama, tapi tetap
+// muncul saat ada versi lebih baru.
+export function getDismissedVersion() {
+  return localStorage.getItem(DISMISS_KEY) || ''
+}
+
+export function setDismissedVersion(version) {
+  localStorage.setItem(DISMISS_KEY, String(version || ''))
+}
 
 // --- Budget bulanan (satu angka batas pengeluaran per bulan) ---
 
