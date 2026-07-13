@@ -142,11 +142,26 @@ body {
 }
 
 /* ---------- Section title ---------- */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 4px 10px;
+}
 .section-title {
   font-size: 14px;
   font-weight: 600;
   color: var(--muted);
-  margin: 6px 4px 10px;
+}
+.export-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
 }
 
 /* ---------- Transaction list ---------- */
@@ -433,6 +448,199 @@ body {
   color: var(--expense);
   font-size: 13px;
   margin-top: 10px;
+}
+
+/* ---------- Budget card ---------- */
+.budget-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  border-left: 4px solid var(--primary);
+}
+.budget-card.near {
+  border-left-color: #f59e0b;
+}
+.budget-card.over {
+  border-left-color: var(--expense);
+}
+.budget-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--muted);
+}
+.budget-set-btn,
+.budget-save {
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 9px;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.budget-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.budget-edit input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-size: 15px;
+  outline: none;
+  min-width: 0;
+}
+.budget-edit input:focus {
+  border-color: var(--primary);
+}
+.budget-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.budget-edit-btn {
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.budget-track {
+  height: 8px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.budget-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.budget-card.near .budget-fill {
+  background: #f59e0b;
+}
+.budget-card.over .budget-fill {
+  background: var(--expense);
+}
+.budget-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.budget-warn {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--expense);
+}
+.budget-card.near .budget-warn {
+  color: #b45309;
+}
+
+/* ---------- Category chart ---------- */
+.chart-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.chart-row {
+  margin-bottom: 10px;
+}
+.chart-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.chart-value {
+  color: var(--muted);
+}
+.chart-track {
+  height: 8px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.chart-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* ---------- Filter bar ---------- */
+.filter-bar {
+  margin-bottom: 12px;
+}
+.search-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+.search-icon {
+  font-size: 14px;
+  opacity: 0.6;
+}
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 11px 8px;
+  font-size: 14px;
+  outline: none;
+  color: var(--text);
+  min-width: 0;
+}
+.search-clear {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+}
+.filter-chips {
+  display: flex;
+  gap: 8px;
+}
+.filter-chip {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.filter-chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
 }
 
 /* ---------- Footer ---------- */

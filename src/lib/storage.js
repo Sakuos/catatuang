@@ -10,6 +10,20 @@
 // ============================================================
 
 const STORAGE_KEY = 'catatuang.transactions'
+const BUDGET_KEY = 'catatuang.budget'
+
+// --- Budget bulanan (satu angka batas pengeluaran per bulan) ---
+
+// Ambil budget (0 = belum diatur).
+export function getBudget() {
+  const n = Number(localStorage.getItem(BUDGET_KEY))
+  return n > 0 ? n : 0
+}
+
+// Simpan budget. Kirim 0 untuk menghapus.
+export function setBudget(amount) {
+  localStorage.setItem(BUDGET_KEY, String(Number(amount) || 0))
+}
 
 // Baca semua transaksi dari penyimpanan.
 // Bentuk 1 transaksi:

@@ -10,12 +10,20 @@
     "cap:sync": "cap sync android",
     "cap:open": "cap open android"
   },
-  "keywords": ["keuangan", "finance", "expense-tracker", "capacitor", "android"],
+  "keywords": [
+    "keuangan",
+    "finance",
+    "expense-tracker",
+    "capacitor",
+    "android"
+  ],
   "author": "Bayu",
   "license": "MIT",
   "dependencies": {
     "@capacitor/android": "^6.1.2",
     "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.4",
+    "@capacitor/share": "^6.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

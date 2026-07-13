@@ -4,6 +4,10 @@ node_modules/
 # Hasil build web
 dist/
 
+# File APK hasil unduhan (jangan di-upload ke GitHub)
+*.apk
+*.zip
+
 # Log
 npm-debug.log*
 yarn-debug.log*

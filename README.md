@@ -13,6 +13,10 @@ Dibuat dengan **React + Vite** lalu dibungkus jadi APK dengan **Capacitor**.
 - ➕ Tambah transaksi: pemasukan / pengeluaran, nominal, kategori, catatan, tanggal
 - ✏️ Edit & 🗑️ hapus transaksi
 - 📊 Ringkasan bulan: saldo, total pemasukan, total pengeluaran
+- 📈 Grafik pengeluaran per kategori
+- 🎯 Budget bulanan dengan peringatan bila mendekati/melewati batas
+- 🔍 Cari & filter transaksi (per jenis / kata kunci)
+- 📤 Export semua transaksi ke CSV (buka di Excel/Spreadsheet)
 - 📅 Pindah antar bulan
 - 🏷️ Kategori dengan ikon (Makan, Transport, Gaji, dll.)
 - 💾 Data tersimpan di HP (offline, privat, tanpa login)
