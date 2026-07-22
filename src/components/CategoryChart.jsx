@@ -7,7 +7,7 @@ const WARNA = ['#0f766e', '#0891b2', '#7c3aed', '#db2777', '#ea580c', '#ca8a04',
 // Grafik pengeluaran per kategori untuk transaksi yang diberikan.
 // Bentuk: batang horizontal proporsional (tanpa library chart).
 // props: transactions -> array transaksi bulan terpilih
-export default function CategoryChart({ transactions }) {
+export default function CategoryChart({ transactions, customCategories = [] }) {
   const pengeluaran = transactions.filter((t) => t.type === 'expense')
   if (pengeluaran.length === 0) return null
 
@@ -27,7 +27,7 @@ export default function CategoryChart({ transactions }) {
     <div className="chart-card">
       <div className="chart-title">📊 Pengeluaran per kategori</div>
       {baris.map((r, i) => {
-        const k = cariKategori('expense', r.cat)
+        const k = cariKategori('expense', r.cat, customCategories)
         return (
           <div key={r.cat} className="chart-row">
             <div className="chart-label">

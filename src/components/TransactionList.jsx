@@ -2,11 +2,7 @@ import { formatRupiah, formatTanggal } from '../lib/format'
 import { cariKategori } from '../lib/categories'
 
 // Daftar transaksi, dikelompokkan per tanggal (terbaru di atas).
-// props:
-//   transactions -> array transaksi (sudah difilter per bulan)
-//   onEdit(tx)   -> minta edit
-//   onDelete(id) -> minta hapus
-export default function TransactionList({ transactions, onEdit, onDelete }) {
+export default function TransactionList({ transactions, onEdit, onDelete, customCategories = [] }) {
   if (transactions.length === 0) {
     return (
       <div className="empty">
@@ -17,7 +13,6 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
     )
   }
 
-  // Urutkan terbaru dulu, lalu kelompokkan per tanggal.
   const urut = [...transactions].sort((a, b) => (a.date < b.date ? 1 : -1))
   const grup = {}
   for (const tx of urut) {
@@ -31,12 +26,15 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
         <div key={tanggal} className="tx-group">
           <div className="tx-date">{formatTanggal(tanggal)}</div>
           {grup[tanggal].map((tx) => {
-            const kat = cariKategori(tx.type, tx.category)
+            const kat = cariKategori(tx.type, tx.category, customCategories)
             return (
               <div key={tx.id} className="tx-item" onClick={() => onEdit(tx)}>
                 <div className="tx-emoji">{kat.emoji}</div>
                 <div className="tx-info">
-                  <div className="tx-category">{kat.label}</div>
+                  <div className="tx-category">
+                    {kat.label}
+                    {tx.recurringId && <span className="recurring-badge">Otomatis</span>}
+                  </div>
                   {tx.note && <div className="tx-note">{tx.note}</div>}
                 </div>
                 <div className="tx-right">
@@ -49,7 +47,10 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
                     aria-label="Hapus"
                     onClick={(e) => {
                       e.stopPropagation()
-                      if (confirm('Hapus transaksi ini?')) onDelete(tx.id)
+                      const pesan = tx.recurringId
+                        ? 'Hapus transaksi otomatis bulan ini? Transaksi bulan berikutnya tetap dibuat.'
+                        : 'Hapus transaksi ini?'
+                      if (confirm(pesan)) onDelete(tx.id)
                     }}
                   >
                     🗑

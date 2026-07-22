@@ -37,6 +37,8 @@ APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
 - 🔔 Notifikasi otomatis saat ada versi baru (banner "Update" di dalam app)
 - 📅 Pindah antar bulan
 - 🏷️ Kategori dengan ikon (Makan, Transport, Gaji, dll.)
+- ✨ Kategori kustom — tambah ikon/nama sendiri, hapus tanpa merusak riwayat
+- 🔄 Transaksi otomatis bulanan untuk gaji, langganan, tagihan, dan lainnya
 - 💾 Data tersimpan di HP (offline, privat, tanpa login)
 - 💵 Format Rupiah
 

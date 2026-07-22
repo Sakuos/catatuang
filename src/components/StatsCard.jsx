@@ -5,7 +5,7 @@ import { cariKategori } from '../lib/categories'
 // props:
 //   transactions -> transaksi bulan terpilih
 //   bulan ('YYYY-MM')
-export default function StatsCard({ transactions, bulan }) {
+export default function StatsCard({ transactions, bulan, customCategories = [] }) {
   if (transactions.length === 0) return null
 
   const pengeluaran = transactions.filter((t) => t.type === 'expense')
@@ -21,7 +21,9 @@ export default function StatsCard({ transactions, bulan }) {
   for (const t of pengeluaran) {
     if (!terbesar || t.amount > terbesar.amount) terbesar = t
   }
-  const katTerbesar = terbesar ? cariKategori('expense', terbesar.category) : null
+  const katTerbesar = terbesar
+    ? cariKategori('expense', terbesar.category, customCategories)
+    : null
 
   return (
     <div className="stats-card">

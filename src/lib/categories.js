@@ -1,5 +1,4 @@
-// Daftar kategori preset. Silakan tambah/ubah sesuai kebutuhan.
-// emoji dipakai sebagai ikon sederhana tanpa perlu library.
+// Daftar kategori preset. Emoji dipakai sebagai ikon sederhana tanpa library.
 
 export const KATEGORI_PENGELUARAN = [
   { id: 'makan', label: 'Makan', emoji: '🍜' },
@@ -18,13 +17,41 @@ export const KATEGORI_PEMASUKAN = [
   { id: 'lainnya', label: 'Lainnya', emoji: '📦' },
 ]
 
-// Ambil daftar kategori sesuai jenis transaksi.
-export function kategoriUntuk(type) {
+export function kategoriPresetUntuk(type) {
   return type === 'income' ? KATEGORI_PEMASUKAN : KATEGORI_PENGELUARAN
 }
 
-// Cari data kategori (label + emoji) dari id-nya, untuk ditampilkan.
-export function cariKategori(type, id) {
-  const found = kategoriUntuk(type).find((k) => k.id === id)
-  return found || { id, label: id, emoji: '📦' }
+// Normalisasi nama untuk perbandingan dan id kategori kustom.
+export function normalisasiLabelKategori(label) {
+  return String(label || '').trim().replace(/\s+/g, ' ')
+}
+
+export function kunciLabelKategori(label) {
+  return normalisasiLabelKategori(label).toLocaleLowerCase('id-ID')
+}
+
+export function buatIdKategori(label, type) {
+  const slug = normalisasiLabelKategori(label)
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') || 'kategori'
+  return `custom-${type}-${slug}`
+}
+
+// Ambil preset + kategori kustom aktif. selectedId tetap disertakan saat mengedit riwayat.
+export function kategoriUntuk(type, customCategories = [], selectedId = '') {
+  const custom = customCategories.filter(
+    (k) => k.type === type && (k.active !== false || k.id === selectedId)
+  )
+  return [...kategoriPresetUntuk(type), ...custom]
+}
+
+// Cari data kategori dari id untuk tampilan transaksi lama maupun baru.
+export function cariKategori(type, id, customCategories = []) {
+  const preset = kategoriPresetUntuk(type).find((k) => k.id === id)
+  if (preset) return preset
+  const custom = customCategories.find((k) => k.type === type && k.id === id)
+  return custom || { id, label: id || 'Lainnya', emoji: '📦' }
 }
