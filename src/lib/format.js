@@ -42,3 +42,18 @@ export function bulanIni() {
 export function bulanDari(isoDate) {
   return isoDate.slice(0, 7)
 }
+
+// Geser bulan YYYY-MM tanpa terpengaruh zona waktu.
+export function geserBulan(yearMonth, delta) {
+  const [y, m] = yearMonth.split('-').map(Number)
+  const d = new Date(y, m - 1 + delta, 1)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+
+// Bentuk tanggal bulanan. Tanggal 29-31 dijepit ke hari terakhir bulan pendek.
+export function tanggalBulanan(yearMonth, dayOfMonth) {
+  const [y, m] = yearMonth.split('-').map(Number)
+  const hariTerakhir = new Date(y, m, 0).getDate()
+  const hari = Math.min(Math.max(Number(dayOfMonth) || 1, 1), hariTerakhir)
+  return `${yearMonth}-${String(hari).padStart(2, '0')}`
+}
