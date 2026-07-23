@@ -6,6 +6,8 @@ dan bisa dipasang sebagai **aplikasi Android (APK)**.
 
 Dibuat dengan **React + Vite** lalu dibungkus jadi APK dengan **Capacitor**.
 
+> 📖 **Dokumentasi proyek** — [PRD.md](PRD.md) (rujukan produk), [plan.md](plan.md) (roadmap), [CLAUDE.md](CLAUDE.md) (aturan kode & verifikasi).
+
 ---
 
 ## 📲 Download & Install (untuk pengguna)
@@ -120,12 +122,15 @@ android/          # project Android (dibuat oleh Capacitor)
 .github/workflows/build-apk.yml   # resep build APK otomatis
 ```
 
-> **Catatan teknis:** semua akses data lewat `src/lib/storage.js`. Kalau nanti mau
-> tambah **sinkron cloud** (Cloudflare), cukup ubah isi file itu — tampilan tak perlu diubah.
+> **Catatan teknis:** semua akses data lewat `src/lib/storage.js` (facade tunggal).
+> Rencana **sinkron cloud** (Cloudflare) akan menggunakan facade ini, tetapi auth,
+> state async, dan UI konflik kemungkinan menyentuh layer lain — detail di [PRD.md](PRD.md).
 
 ---
 
 ## 🔜 Rencana berikutnya (Tahap 2)
+
+Arah produk lengkap ada di [PRD.md](PRD.md); urutan eksekusi di [plan.md](plan.md). Singkatnya:
 
 - ☁️ Sinkron cloud pakai **Cloudflare Workers + D1** agar data bisa diakses dari beberapa perangkat
 - 🔐 Login sederhana

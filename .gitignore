@@ -19,6 +19,10 @@ yarn-error.log*
 .vscode/
 *.local
 
+# Konteks lokal Claude (jangan di-commit)
+/.claude/
+/konteks.txt
+
 # Android build (folder android/ tetap di-commit, tapi hasil build-nya diabaikan)
 android/.gradle/
 android/build/
