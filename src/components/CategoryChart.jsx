@@ -2,7 +2,7 @@ import { formatRupiah } from '../lib/format'
 import { cariKategori } from '../lib/categories'
 
 // Warna batang (dipakai berulang bila kategori banyak).
-const WARNA = ['#0f766e', '#0891b2', '#7c3aed', '#db2777', '#ea580c', '#ca8a04', '#65a30d']
+const WARNA = ['#22d3ee', '#c084fc', '#fb7185', '#fbbf24', '#34d399', '#60a5fa', '#f472b6']
 
 // Grafik pengeluaran per kategori untuk transaksi yang diberikan.
 // Bentuk: batang horizontal proporsional (tanpa library chart).
