@@ -18,17 +18,20 @@ APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
 2. Di rilis paling atas, bagian **Assets**, unduh **`CatatUang.apk`**
 3. Buka file-nya di HP → **Install**. Jika diminta, izinkan "Install dari sumber tak dikenal"
 
-> 🔄 **Cara update:** cukup ulangi langkah di atas dengan rilis terbaru.
+> 🔄 **Cara update:** cukup ulangi langkah di atas dengan rilis terbaru — APK bisa
+> langsung ditimpa tanpa hapus data.
 >
-> ⚠️ **Catatan penting untuk pengguna lama:**
-> Versi di atas v1.0.12 mulai menggunakan kunci signing permanen. Jika HP kamu menolak pembaruan (error bentrok aplikasi), langkah migrasinya:
+> ⚠️ **Catatan untuk pengguna versi lama (≤ v1.0.12):**
+> Versi di atas v1.0.12 mulai menggunakan kunci signing permanen. Jika HP menolak
+> pembaruan (error bentrok aplikasi / "app not installed"), lakukan migrasi satu kali:
 >
-> 1. Buka CatatUang lama, pergi ke **Profil → Import & Export**.
-> 2. Lakukan export ke file CSV.
-> 3. Hapus (uninstall) aplikasi CatatUang lama.
+> 1. Buka CatatUang lama → **Profil → Import & Export**.
+> 2. Export ke file CSV.
+> 3. Hapus (uninstall) aplikasi lama.
 > 4. Pasang APK versi terbaru.
-> 5. Buka kembali **Profil → Import & Export** lalu masukkan file CSV kamu.
->    Setelah proses satu kali ini, semua update ke depan bisa langsung ditimpa (in-place) dengan aman tanpa harus hapus data lagi.
+> 5. Buka **Profil → Import & Export** → masukkan file CSV tadi.
+>
+> Setelah ini, semua update ke depan bisa ditimpa in-place tanpa kehilangan data.
 
 ---
 
@@ -80,7 +83,8 @@ npm run preview
 
 ## 📱 Membuat APK Android (otomatis lewat GitHub)
 
-Kamu **tidak perlu** install Android Studio. Server GitHub yang membuat APK-nya.
+Kamu **tidak perlu** install Android Studio. Server GitHub yang membuat APK-nya, sudah
+versi **release** dan **signed** dengan keystore permanen.
 
 1. Buat repo baru di GitHub, lalu unggah project ini:
 
@@ -93,17 +97,59 @@ Kamu **tidak perlu** install Android Studio. Server GitHub yang membuat APK-nya.
    git push -u origin main
    ```
 
-2. Buka repo di GitHub → tab **Actions**. Workflow **"Build APK"** akan otomatis jalan
-   setiap kali kamu `push`. (Bisa juga ditekan manual lewat tombol **Run workflow**.)
+2. Siapkan keystore sekali saja, lalu simpan sebagai **Repository secrets**
+   (Settings → Secrets and variables → Actions):
 
-3. Tunggu sampai ✅ hijau (sekitar 3–5 menit). Klik workflow yang selesai → bagian
-   **Artifacts** di bawah → unduh **`CatatUang-apk`**.
+   ```bash
+   # buat keystore (simpan file & password ini baik-baik, jangan commit)
+   keytool -genkeypair -v -keystore catatuang-release.jks \
+     -keyalg RSA -keysize 2048 -validity 10000 -alias catatuang
 
-4. Di dalamnya ada file **`app-debug.apk`**. Kirim ke HP (WhatsApp/Telegram/kabel USB),
-   lalu buka untuk memasang. Jika diminta, aktifkan **"Install dari sumber tak dikenal"**.
+   # ubah jadi base64 untuk ditempel ke secret
+   base64 -w 0 catatuang-release.jks > keystore.base64.txt
+   ```
 
-> APK ini versi **debug** (untuk pemakaian sendiri). Untuk publikasi ke Play Store nanti
-> perlu APK/AAB versi **release** yang ditandatangani (signed).
+   | Secret                      | Isi                         |
+   | --------------------------- | --------------------------- |
+   | `ANDROID_KEYSTORE_BASE64`   | isi `keystore.base64.txt`   |
+   | `ANDROID_KEYSTORE_PASSWORD` | password keystore           |
+   | `ANDROID_KEY_ALIAS`         | alias key, mis. `catatuang` |
+   | `ANDROID_KEY_PASSWORD`      | password key                |
+
+   Kalau salah satu secret kosong, workflow berhenti dengan pesan jelas — bukan diam-diam
+   menghasilkan APK tanpa tanda tangan.
+
+3. Buka repo di GitHub → tab **Actions**. Workflow **"Build APK"** otomatis jalan setiap
+   `push` ke `main`. (Bisa juga ditekan manual lewat tombol **Run workflow**.)
+
+4. Tunggu sampai ✅ hijau (sekitar 3–5 menit). Hasilnya ada dua tempat:
+   - **Releases** → rilis `v1.0.<nomor-build>` dengan aset **`CatatUang.apk`** (hanya untuk push ke `main`)
+   - **Artifacts** di halaman run → **`CatatUang-apk`** sebagai cadangan
+
+5. Kirim APK ke HP (WhatsApp/Telegram/kabel USB), lalu buka untuk memasang. Jika diminta,
+   aktifkan **"Install dari sumber tak dikenal"**.
+
+> `versionName` = `1.0.<nomor-build>` dan `versionCode` naik otomatis tiap build, jadi
+> update berikutnya bisa ditimpa in-place. Sebelum diunggah, APK dicek dengan
+> `apksigner verify` supaya build gagal kalau tanda tangannya tidak sah.
+
+### Build release di komputer sendiri
+
+Butuh 4 environment variable yang sama seperti CI:
+
+```bash
+export CATATUANG_KEYSTORE_FILE=/path/catatuang-release.jks
+export CATATUANG_KEYSTORE_PASSWORD=...
+export CATATUANG_KEY_ALIAS=catatuang
+export CATATUANG_KEY_PASSWORD=...
+
+npm run build
+npm run cap:sync
+cd android && ./gradlew assembleRelease
+```
+
+Tanpa keempat variable itu, `assembleRelease` sengaja gagal (lihat `android/app/build.gradle`)
+agar tidak ada APK release tanpa signing.
 
 ---
 
