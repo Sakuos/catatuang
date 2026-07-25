@@ -53,11 +53,11 @@ Sumber produk: `PRD.md`. Aturan kode & verifikasi: `CLAUDE.md`.
 
 **Done ketika:** `npm run build` sukses; screenshot light/dark sebelum-sesudah identik; alur UI `catatuang:verify` lulus.
 
-## Milestone 5 — Keandalan rilis `planned`
+## Milestone 5 — Keandalan rilis `active`
 
-**Deliverable:** ganti debug signing yang berubah-ubah dengan release signing stabil; keystore & password di GitHub Secrets; build APK/AAB signed.
+**Deliverable:** ganti debug signing yang berubah-ubah dengan release signing stabil; keystore & password di GitHub Secrets; build APK/AAB signed; versionCode otomatis naik tiap rilis.
 
-**Constraint:** update APK baru dapat menimpa instalasi lama tanpa kehilangan data lokal.
+**Constraint:** update APK baru dapat menimpa instalasi lama tanpa kehilangan data lokal (setelah migrasi satu kali dari debug-signed ke release-signed).
 
 **Done ketika:** update in-place terpasang dan data pengguna selamat (diverifikasi di HP).
 

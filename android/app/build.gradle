@@ -1,5 +1,26 @@
 apply plugin: 'com.android.application'
 
+String releaseKeystoreFile = System.getenv('CATATUANG_KEYSTORE_FILE')
+String releaseKeystorePassword = System.getenv('CATATUANG_KEYSTORE_PASSWORD')
+String releaseKeyAlias = System.getenv('CATATUANG_KEY_ALIAS')
+String releaseKeyPassword = System.getenv('CATATUANG_KEY_PASSWORD')
+boolean releaseSigningReady = [
+    releaseKeystoreFile,
+    releaseKeystorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword
+].every { it != null && !it.trim().isEmpty() }
+
+gradle.taskGraph.whenReady { taskGraph ->
+    boolean releaseBuildRequested = taskGraph.allTasks.any {
+        String taskName = it.name.toLowerCase()
+        taskName == 'assemblerelease' || taskName == 'bundlerelease'
+    }
+    if (releaseBuildRequested && !releaseSigningReady) {
+        throw new GradleException('Release signing belum dikonfigurasi. Isi CATATUANG_KEYSTORE_FILE, CATATUANG_KEYSTORE_PASSWORD, CATATUANG_KEY_ALIAS, dan CATATUANG_KEY_PASSWORD.')
+    }
+}
+
 android {
     namespace "com.bayu.catatuang"
     compileSdk rootProject.ext.compileSdkVersion
@@ -7,8 +28,14 @@ android {
         applicationId "com.bayu.catatuang"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        
+        // Ambil versi dari environment variables, fallback ke default untuk build lokal biasa
+        def envVersionCode = System.getenv("CATATUANG_VERSION_CODE")
+        def envVersionName = System.getenv("CATATUANG_VERSION_NAME")
+        
+        versionCode envVersionCode ? envVersionCode.toInteger() : 1
+        versionName envVersionName ?: "1.0"
+        
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +43,21 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (releaseSigningReady) {
+            release {
+                storeFile file(releaseKeystoreFile)
+                storePassword releaseKeystorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
     buildTypes {
         release {
+            if (releaseSigningReady) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

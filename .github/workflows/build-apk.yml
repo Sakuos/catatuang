@@ -33,8 +33,6 @@ jobs:
         run: npm ci
 
       # 4. Build web app (menghasilkan folder dist/)
-      #    Suntik nomor versi ke app agar cocok dengan tag release
-      #    (v1.0.<nomor-build>) — dipakai fitur "cek versi baru".
       - name: Build web
         run: npm run build
         env:
@@ -55,18 +53,39 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
-      # 8. Build APK (versi debug — tidak perlu keystore)
-      - name: Build APK debug
+      # 8. Decode keystore dari GitHub Secrets ke file sementara
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > $HOME/catatuang-release.jks
+          echo "CATATUANG_KEYSTORE_FILE=$HOME/catatuang-release.jks" >> $GITHUB_ENV
+          echo "CATATUANG_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "CATATUANG_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "CATATUANG_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "CATATUANG_VERSION_CODE=${{ github.run_number }}" >> $GITHUB_ENV
+          echo "CATATUANG_VERSION_NAME=1.0.${{ github.run_number }}" >> $GITHUB_ENV
+
+      # 9. Build APK (versi release — signed dengan keystore permanen)
+      - name: Build APK release
         run: |
           cd android
           chmod +x ./gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
 
-      # 9. Ubah nama APK jadi ramah (CatatUang.apk)
+      # 10. Verifikasi APK signed
+      - name: Verifikasi signing APK
+        run: |
+          APK_PATH=android/app/build/outputs/apk/release/app-release.apk
+          if [ ! -f "$APK_PATH" ]; then
+            echo "APK release tidak ditemukan!"
+            exit 1
+          fi
+          $ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner verify --verbose "$APK_PATH" || true
+
+      # 11. Ubah nama APK jadi ramah (CatatUang.apk)
       - name: Ganti nama APK
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk CatatUang.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk CatatUang.apk
 
-      # 10. Unggah APK sebagai artifact (cadangan, bisa diunduh dari halaman run)
+      # 12. Upload APK sebagai artifact (cadangan, bisa diunduh dari halaman run)
       - name: Upload APK (artifact)
         uses: actions/upload-artifact@v4
         with:
@@ -74,7 +93,7 @@ jobs:
           path: CatatUang.apk
           if-no-files-found: error
 
-      # 11. Terbitkan GitHub Release dengan APK terlampir.
+      # 13. Terbitkan GitHub Release dengan APK terlampir.
       #     Hanya jalan untuk push ke main (bukan saat dites manual biasa).
       #     Tiap build dapat nomor versi otomatis: v1.0.<nomor-build>
       - name: Terbitkan Release
@@ -85,3 +104,20 @@ jobs:
           name: CatatUang v1.0.${{ github.run_number }}
           files: CatatUang.apk
           generate_release_notes: true
+          body: |
+            ## Catatan Update
+
+            **Versi ini memakai sistem signing permanen.**
+
+            Jika versi sebelumnya gagal diperbarui (error "app not installed" / bentrok signing):
+            1. Export data CSV dari aplikasi lama
+            2. Uninstall aplikasi lama
+            3. Install APK ini
+            4. Import kembali data CSV
+
+            Setelah migrasi satu kali ini, update berikutnya dapat dipasang langsung tanpa kehilangan data.
+
+      # 14. Bersihkan keystore sementara
+      - name: Cleanup keystore
+        if: always()
+        run: rm -f $HOME/catatuang-release.jks

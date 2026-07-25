@@ -18,9 +18,17 @@ APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
 2. Di rilis paling atas, bagian **Assets**, unduh **`CatatUang.apk`**
 3. Buka file-nya di HP → **Install**. Jika diminta, izinkan "Install dari sumber tak dikenal"
 
-> 🔄 **Cara update:** cukup ulangi langkah di atas dengan rilis terbaru. Data lama kamu
-> tetap aman (tersimpan di HP). Android akan meminta konfirmasi setiap update — ini normal
-> untuk aplikasi di luar Play Store.
+> 🔄 **Cara update:** cukup ulangi langkah di atas dengan rilis terbaru.
+>
+> ⚠️ **Catatan penting untuk pengguna lama:**
+> Versi di atas v1.0.12 mulai menggunakan kunci signing permanen. Jika HP kamu menolak pembaruan (error bentrok aplikasi), langkah migrasinya:
+>
+> 1. Buka CatatUang lama, pergi ke **Profil → Import & Export**.
+> 2. Lakukan export ke file CSV.
+> 3. Hapus (uninstall) aplikasi CatatUang lama.
+> 4. Pasang APK versi terbaru.
+> 5. Buka kembali **Profil → Import & Export** lalu masukkan file CSV kamu.
+>    Setelah proses satu kali ini, semua update ke depan bisa langsung ditimpa (in-place) dengan aman tanpa harus hapus data lagi.
 
 ---
 

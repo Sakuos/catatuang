@@ -7,6 +7,8 @@ dist/
 # File APK hasil unduhan (jangan di-upload ke GitHub)
 *.apk
 *.zip
+*.jks
+*.keystore
 
 # Log
 npm-debug.log*
