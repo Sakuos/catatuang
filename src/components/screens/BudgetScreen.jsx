@@ -37,7 +37,8 @@ export default function BudgetScreen({
 
   return (
     <div className="screen-content">
-      {budget > 0 ? (
+      <div className="scroll-area">
+        {budget > 0 ? (
         <article className={'budget-hero' + (overview.over ? ' over' : '')}>
           <div
             className="ring"
@@ -132,6 +133,7 @@ export default function BudgetScreen({
         forceEdit={editorSheet === 'goal'}
         onClose={onCloseEditor}
       />
+      </div>
     </div>
   )
 }

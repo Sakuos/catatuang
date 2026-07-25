@@ -28,7 +28,8 @@ export default function TransactionsScreen({
 
   return (
     <div className="screen-content">
-      <article className="summary-card">
+      <div className="scroll-area">
+        <article className="summary-card">
         <SummaryMetric label="Pemasukan" value={formatRupiah(income)} tone="income" />
         <SummaryMetric label="Pengeluaran" value={formatRupiah(expense)} tone="expense" />
         <SummaryMetric label="Selisih" value={formatRupiah(selisih)} />
@@ -65,6 +66,7 @@ export default function TransactionsScreen({
         customCategories={customCategories}
       />
       <CategoryChart transactions={monthTransactions} customCategories={customCategories} />
+      </div>
     </div>
   )
 }

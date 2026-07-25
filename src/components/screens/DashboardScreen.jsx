@@ -33,7 +33,8 @@ export default function DashboardScreen({
 
   return (
     <div className="screen-content">
-      <article className="balance-card">
+      <div className="scroll-area">
+        <article className="balance-card">
         <div>
           <p>Saldo tersedia</p>
           <h2 className={saldo < 0 ? 'negative' : ''}>{formatRupiah(saldo)}</h2>
@@ -102,7 +103,8 @@ export default function DashboardScreen({
         </div>
       ) : (
         <p className="gesture-hint">Belum ada transaksi di {formatBulan(bulan)}.</p>
-      )}
+        )}
+      </div>
     </div>
   )
 }

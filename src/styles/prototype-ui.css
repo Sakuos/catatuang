@@ -84,7 +84,7 @@ body {
 }
 .scroll-area {
   overflow: auto;
-  padding: 16px 18px 34px;
+  padding: 16px 18px 90px;
   scrollbar-width: none;
 }
 .scroll-area::-webkit-scrollbar {
@@ -644,6 +644,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   z-index: 8;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 .bottom-nav button {
   border: 0;

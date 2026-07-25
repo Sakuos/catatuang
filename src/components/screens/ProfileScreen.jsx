@@ -23,7 +23,8 @@ export default function ProfileScreen({
 
   return (
     <div className="screen-content">
-      {update && <UpdateBanner info={update} onDismiss={dismissUpdate} />}
+      <div className="scroll-area">
+        {update && <UpdateBanner info={update} onDismiss={dismissUpdate} />}
 
       <article className="profile-card">
         <div className="avatar">C</div>
@@ -117,7 +118,8 @@ export default function ProfileScreen({
         </button>
       </div>
 
-      <p className="gesture-hint">Data tersimpan di HP kamu · offline</p>
+        <p className="gesture-hint">Data tersimpan di HP kamu · offline</p>
+      </div>
     </div>
   )
 }
