@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { kategoriPresetUntuk, kategoriUntuk } from '../lib/categories'
+import { kategoriPresetUntuk, kategoriUntuk } from '../../lib/categories'
 
 // Pemilih kategori preset + kustom.
 export default function CategoryPicker({
@@ -41,7 +41,10 @@ export default function CategoryPicker({
         {daftar.map((k) => {
           const custom = k.id.startsWith('custom-')
           return (
-            <div key={k.id} className={'category-chip-wrap' + (k.active === false ? ' inactive' : '')}>
+            <div
+              key={k.id}
+              className={'category-chip-wrap' + (k.active === false ? ' inactive' : '')}
+            >
               <button
                 type="button"
                 className={'chip' + (value === k.id ? ' chip-active' : '')}
@@ -64,7 +67,11 @@ export default function CategoryPicker({
           )
         })}
         {onAddCategory && (
-          <button type="button" className="chip category-add-btn" onClick={() => setAdding(!adding)}>
+          <button
+            type="button"
+            className="chip category-add-btn"
+            onClick={() => setAdding(!adding)}
+          >
             + Kategori
           </button>
         )}

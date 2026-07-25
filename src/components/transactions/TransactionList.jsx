@@ -1,15 +1,12 @@
-import { formatRupiah, formatTanggal } from '../lib/format'
-import { cariKategori } from '../lib/categories'
+import { formatRupiah, formatTanggal } from '../../lib/format'
+import { cariKategori } from '../../lib/categories'
+import { EmptyState } from '../ui/States'
 
 // Daftar transaksi, dikelompokkan per tanggal (terbaru di atas).
 export default function TransactionList({ transactions, onEdit, onDelete, customCategories = [] }) {
   if (transactions.length === 0) {
     return (
-      <div className="empty">
-        <div className="empty-emoji">🗒️</div>
-        <p>Belum ada transaksi di bulan ini.</p>
-        <p className="empty-hint">Tekan tombol + untuk menambah.</p>
-      </div>
+      <EmptyState title="Belum ada transaksi di bulan ini." hint="Tekan tombol + untuk menambah." />
     )
   }
 

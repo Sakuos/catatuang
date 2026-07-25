@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import CategoryPicker from './CategoryPicker'
-import { kategoriUntuk } from '../lib/categories'
-import { hariIni } from '../lib/format'
+import CategoryPicker from '../categories/CategoryPicker'
+import AmountInput from '../shared/AmountInput'
+import { parseAmount } from '../../lib/amount'
+import TypeToggle from '../shared/TypeToggle'
+import { kategoriUntuk } from '../../lib/categories'
+import { hariIni } from '../../lib/format'
 
 export default function RecurringForm({
   initial,
@@ -22,6 +25,7 @@ export default function RecurringForm({
   const [startDate, setStartDate] = useState(initial?.startDate || hariIni())
   const [endDate, setEndDate] = useState(initial?.endDate || '')
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   function gantiJenis(nextType) {
     setType(nextType)
@@ -30,40 +34,27 @@ export default function RecurringForm({
 
   function submit(e) {
     e.preventDefault()
-    const nominal = Number(amount.replace(/\D/g, ''))
+    const nominal = parseAmount(amount)
     const day = Number(dayOfMonth)
     if (!nominal) return setError('Masukkan nominal yang benar.')
-    if (!Number.isInteger(day) || day < 1 || day > 31) return setError('Tanggal bulanan harus 1–31.')
-    if (!startDate || (endDate && endDate < startDate)) return setError('Rentang tanggal tidak valid.')
+    if (!Number.isInteger(day) || day < 1 || day > 31)
+      return setError('Tanggal bulanan harus 1–31.')
+    if (!startDate || (endDate && endDate < startDate))
+      return setError('Rentang tanggal tidak valid.')
     setError('')
-    onSubmit({ type, amount: nominal, category, note, dayOfMonth: day, startDate, endDate })
+    setIsSubmitting(true)
+    setTimeout(() => {
+      onSubmit({ type, amount: nominal, category, note, dayOfMonth: day, startDate, endDate })
+      setIsSubmitting(false)
+    }, 10)
   }
 
   return (
     <form className="form" onSubmit={submit}>
-      <div className="type-toggle">
-        <button type="button" className={'type-btn' + (type === 'expense' ? ' active-expense' : '')} onClick={() => gantiJenis('expense')}>
-          Pengeluaran
-        </button>
-        <button type="button" className={'type-btn' + (type === 'income' ? ' active-income' : '')} onClick={() => gantiJenis('income')}>
-          Pemasukan
-        </button>
-      </div>
+      <TypeToggle value={type} onChange={gantiJenis} />
 
       <label className="field-label">Nominal bulanan</label>
-      <div className="amount-input">
-        <span className="amount-prefix">Rp</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          placeholder="0"
-          value={amount}
-          onChange={(e) => {
-            const angka = e.target.value.replace(/\D/g, '')
-            setAmount(angka ? Number(angka).toLocaleString('id-ID') : '')
-          }}
-        />
-      </div>
+      <AmountInput value={amount} onChange={setAmount} />
 
       <label className="field-label">Kategori</label>
       <CategoryPicker
@@ -76,21 +67,45 @@ export default function RecurringForm({
       />
 
       <label className="field-label">Catatan</label>
-      <input className="text-input" value={note} onChange={(e) => setNote(e.target.value)} placeholder="mis. Netflix atau Gaji" />
+      <input
+        className="text-input"
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="mis. Netflix atau Gaji"
+      />
 
       <div className="recurring-date-grid">
         <div>
           <label className="field-label">Setiap tanggal</label>
-          <input className="text-input" type="number" min="1" max="31" inputMode="numeric" value={dayOfMonth} onChange={(e) => setDayOfMonth(e.target.value)} />
+          <input
+            className="text-input"
+            type="number"
+            min="1"
+            max="31"
+            inputMode="numeric"
+            value={dayOfMonth}
+            onChange={(e) => setDayOfMonth(e.target.value)}
+          />
         </div>
         <div>
           <label className="field-label">Mulai</label>
-          <input className="text-input" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <input
+            className="text-input"
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
         </div>
       </div>
 
       <label className="field-label">Selesai (opsional)</label>
-      <input className="text-input" type="date" min={startDate} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+      <input
+        className="text-input"
+        type="date"
+        min={startDate}
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+      />
 
       <div className="form-info">
         Tanggal 29–31 otomatis pindah ke hari terakhir pada bulan yang lebih pendek.
@@ -99,8 +114,12 @@ export default function RecurringForm({
       {error && <div className="error-text">{error}</div>}
 
       <div className="form-actions">
-        <button type="button" className="btn btn-ghost" onClick={onCancel}>Batal</button>
-        <button type="submit" className="btn btn-primary">{initial ? 'Simpan Perubahan' : 'Buat Otomatis'}</button>
+        <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={isSubmitting}>
+          Batal
+        </button>
+        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+          {isSubmitting ? 'Menyimpan...' : initial ? 'Simpan Perubahan' : 'Buat Otomatis'}
+        </button>
       </div>
     </form>
   )

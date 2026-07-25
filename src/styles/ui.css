@@ -1,0 +1,182 @@
+/* ============================================================
+   Komponen UI reusable — surface, row, metric, state, progress.
+   ============================================================ */
+
+/* ---------- SurfaceCard ---------- */
+.surface-card {
+  background: var(--card-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+.surface-elevated {
+  background: var(--glass-bg-strong);
+  box-shadow: var(--shadow);
+}
+.surface-accent {
+  border-color: var(--accent-green);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(81, 230, 180, 0.08);
+}
+
+/* ---------- SummaryMetric ---------- */
+.summary-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.summary-metric-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.summary-metric-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ---------- TransactionRow ---------- */
+.transaction-row {
+  display: grid;
+  grid-template-columns: 43px 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 13px 14px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  font-family: inherit;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+.transaction-row:active {
+  background: var(--surface-2);
+}
+.transaction-row-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--icon-bg);
+  color: var(--accent-cyan);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.transaction-row-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.transaction-row-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.transaction-row-subtitle {
+  color: var(--muted);
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.transaction-row-end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+.transaction-row-amount {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.transaction-row-amount.income {
+  color: var(--income);
+}
+.transaction-row-amount.expense {
+  color: var(--expense);
+}
+.transaction-row-compact {
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- CategoryProgress ---------- */
+.cat-progress {
+  padding: var(--space-3) 0;
+}
+.cat-progress-head {
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+.cat-progress-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--icon-bg);
+  font-size: 16px;
+}
+.cat-progress-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.cat-progress-amount {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: 10px;
+  margin-right: var(--space-2);
+}
+.cat-progress-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+.cat-progress-track {
+  height: 6px;
+  background: var(--track-bg);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+.cat-progress-fill {
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+  border-radius: var(--radius-pill);
+  transition: width 0.3s ease;
+}
+
+/* ---------- UI States ---------- */
+.ui-state {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px var(--space-5);
+}
+.ui-state-icon {
+  font-size: 44px;
+  margin-bottom: var(--space-2);
+}
+.ui-state-title {
+  margin: var(--space-1) 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.ui-state-hint {
+  font-size: 13px;
+  margin: var(--space-1) 0 0;
+}

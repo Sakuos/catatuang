@@ -1,5 +1,5 @@
-import { formatRupiah } from '../lib/format'
-import { cariKategori } from '../lib/categories'
+import { formatRupiah } from '../../lib/format'
+import { cariKategori } from '../../lib/categories'
 
 // Warna batang (dipakai berulang bila kategori banyak).
 const WARNA = ['#22d3ee', '#c084fc', '#fb7185', '#fbbf24', '#34d399', '#60a5fa', '#f472b6']

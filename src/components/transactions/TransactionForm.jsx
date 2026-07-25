@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import CategoryPicker from './CategoryPicker'
-import { kategoriUntuk } from '../lib/categories'
-import { hariIni } from '../lib/format'
+import CategoryPicker from '../categories/CategoryPicker'
+import AmountInput from '../shared/AmountInput'
+import { parseAmount } from '../../lib/amount'
+import TypeToggle from '../shared/TypeToggle'
+import { kategoriUntuk } from '../../lib/categories'
+import { hariIni } from '../../lib/format'
 
 // Form tambah / edit transaksi.
 export default function TransactionForm({
@@ -21,6 +24,8 @@ export default function TransactionForm({
   const [date, setDate] = useState(initial?.date || hariIni())
   const [error, setError] = useState('')
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   function gantiJenis(t) {
     setType(t)
     setCategory(kategoriUntuk(t, customCategories)[0].id)
@@ -28,48 +33,26 @@ export default function TransactionForm({
 
   function submit(e) {
     e.preventDefault()
-    const nominal = Number(amount.replace(/\D/g, ''))
+    const nominal = parseAmount(amount)
     if (!nominal || nominal <= 0) {
       setError('Masukkan nominal yang benar.')
       return
     }
     setError('')
-    onSubmit({ type, amount: nominal, category, note: note.trim(), date })
+    setIsSubmitting(true)
+    // Beri waktu sejenak agar UI render state loading sebelum flush ke storage (yg bs blocking)
+    setTimeout(() => {
+      onSubmit({ type, amount: nominal, category, note: note.trim(), date })
+      setIsSubmitting(false)
+    }, 10)
   }
 
   return (
     <form className="form" onSubmit={submit}>
-      <div className="type-toggle">
-        <button
-          type="button"
-          className={'type-btn' + (type === 'expense' ? ' active-expense' : '')}
-          onClick={() => gantiJenis('expense')}
-        >
-          Pengeluaran
-        </button>
-        <button
-          type="button"
-          className={'type-btn' + (type === 'income' ? ' active-income' : '')}
-          onClick={() => gantiJenis('income')}
-        >
-          Pemasukan
-        </button>
-      </div>
+      <TypeToggle value={type} onChange={gantiJenis} />
 
       <label className="field-label">Nominal</label>
-      <div className="amount-input">
-        <span className="amount-prefix">Rp</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          placeholder="0"
-          value={amount}
-          onChange={(e) => {
-            const angka = e.target.value.replace(/\D/g, '')
-            setAmount(angka ? Number(angka).toLocaleString('id-ID') : '')
-          }}
-        />
-      </div>
+      <AmountInput value={amount} onChange={setAmount} />
 
       <label className="field-label">Kategori</label>
       <CategoryPicker
@@ -82,7 +65,12 @@ export default function TransactionForm({
       />
 
       <label className="field-label">Tanggal</label>
-      <input className="text-input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+      <input
+        className="text-input"
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+      />
 
       <label className="field-label">Catatan (opsional)</label>
       <input
@@ -94,18 +82,25 @@ export default function TransactionForm({
       />
 
       {initial?.recurringId && (
-        <div className="form-info">Transaksi otomatis. Perubahan hanya berlaku untuk transaksi ini.</div>
+        <div className="form-info">
+          Transaksi otomatis. Perubahan hanya berlaku untuk transaksi ini.
+        </div>
       )}
       {error && <div className="error-text">{error}</div>}
 
       <div className="form-actions">
         {initial && (
-          <button type="button" className="btn btn-ghost" onClick={onCancel}>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
             Batal
           </button>
         )}
-        <button type="submit" className="btn btn-primary">
-          {initial ? 'Simpan Perubahan' : 'Tambah'}
+        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+          {isSubmitting ? 'Menyimpan...' : initial ? 'Simpan Perubahan' : 'Tambah'}
         </button>
       </div>
     </form>

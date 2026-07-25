@@ -1,4 +1,4 @@
-import { openDownload } from '../lib/update'
+import { openDownload } from '../../lib/update'
 
 // Banner pemberitahuan versi baru.
 // props:
@@ -15,12 +15,7 @@ export default function UpdateBanner({ info, onDismiss }) {
         <button type="button" className="update-btn" onClick={() => openDownload(info.url)}>
           Update
         </button>
-        <button
-          type="button"
-          className="update-close"
-          onClick={onDismiss}
-          aria-label="Tutup"
-        >
+        <button type="button" className="update-close" onClick={onDismiss} aria-label="Tutup">
           ✕
         </button>
       </div>

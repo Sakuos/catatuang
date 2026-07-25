@@ -1,5 +1,5 @@
-import { cariKategori } from '../lib/categories'
-import { formatRupiah } from '../lib/format'
+import { cariKategori } from '../../lib/categories'
+import { formatRupiah } from '../../lib/format'
 
 export default function RecurringCard({
   patterns,
@@ -16,7 +16,9 @@ export default function RecurringCard({
           <div className="recurring-title">🔄 Transaksi Otomatis</div>
           <div className="recurring-subtitle">Langganan dan pemasukan bulanan</div>
         </div>
-        <button type="button" className="budget-set-btn" onClick={onAdd}>+ Atur</button>
+        <button type="button" className="budget-set-btn" onClick={onAdd}>
+          + Atur
+        </button>
       </div>
 
       {patterns.length === 0 ? (
@@ -26,7 +28,10 @@ export default function RecurringCard({
           {patterns.map((pattern) => {
             const category = cariKategori(pattern.type, pattern.category, customCategories)
             return (
-              <div key={pattern.id} className={'recurring-item' + (!pattern.active ? ' paused' : '')}>
+              <div
+                key={pattern.id}
+                className={'recurring-item' + (!pattern.active ? ' paused' : '')}
+              >
                 <div className="recurring-emoji">{category.emoji}</div>
                 <div className="recurring-info">
                   <div className="recurring-name">
@@ -38,13 +43,18 @@ export default function RecurringCard({
                   </div>
                 </div>
                 <div className="recurring-actions">
-                  <button type="button" onClick={() => onEdit(pattern)}>Edit</button>
-                  <button type="button" onClick={() => onToggle(pattern)}>{pattern.active ? 'Jeda' : 'Aktifkan'}</button>
+                  <button type="button" onClick={() => onEdit(pattern)}>
+                    Edit
+                  </button>
+                  <button type="button" onClick={() => onToggle(pattern)}>
+                    {pattern.active ? 'Jeda' : 'Aktifkan'}
+                  </button>
                   <button
                     type="button"
                     className="danger"
                     onClick={() => {
-                      if (confirm('Hapus pola ini? Transaksi lama tetap tersimpan.')) onDelete(pattern.id)
+                      if (confirm('Hapus pola ini? Transaksi lama tetap tersimpan.'))
+                        onDelete(pattern.id)
                     }}
                   >
                     Hapus

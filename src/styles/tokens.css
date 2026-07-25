@@ -1,0 +1,189 @@
+/* ============================================================
+   CatatUang — Design reference v2 (dark mobile)
+   Dark: obsidian deep + neon green/cyan/purple accents.
+   Light: frosted white glass (dipertahankan).
+   ============================================================ */
+
+/* ---------- Font (bundled lokal, offline) ---------- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-700.woff2') format('woff2');
+}
+
+/* ---------- Light (frosted white glass) ---------- */
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --bg: #e7ecf4;
+  --bg-glow-1: rgba(124, 58, 237, 0.1);
+  --bg-glow-2: rgba(8, 145, 178, 0.1);
+
+  --surface: #ffffff;
+  --surface-2: #f4f7fb;
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-bg-soft: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 16px;
+  --glass-highlight: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 8px 32px rgba(30, 41, 59, 0.16);
+
+  --accent-cyan: #0891b2;
+  --accent-purple: #7c3aed;
+  --accent-green: #059669;
+  --border-gradient: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+
+  --income: #059669;
+  --expense: #e11d48;
+  --warn: #d97706;
+
+  --text: #0f172a;
+  --muted: rgba(15, 23, 42, 0.55);
+  --hairline: rgba(15, 23, 42, 0.08);
+  --eyebrow: rgba(15, 23, 42, 0.5);
+
+  --radius: 22px;
+  --radius-sm: 16px;
+  --radius-xs: 12px;
+  --radius-pill: 999px;
+
+  --primary: var(--accent-cyan);
+  --primary-dark: var(--accent-purple);
+
+  --nav-h: 64px;
+
+  /* Spacing scale (grid 4/8) — dipakai komponen reusable. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Touch target minimum (a11y). */
+  --touch: 44px;
+
+  /* Border solid + bayangan halus (flat dark, bukan glow). */
+  --border: rgba(15, 23, 42, 0.12);
+  --shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.1);
+}
+
+/* ---------- Dark (v2: obsidian deep + neon) ---------- */
+:root[data-theme='dark'] {
+  --bg: #090d16;
+  --bg-glow-1: rgba(140, 124, 255, 0.14);
+  --bg-glow-2: rgba(34, 211, 238, 0.1);
+
+  --surface: #111827;
+  --surface-2: #151e30;
+
+  --glass-bg: rgba(23, 32, 51, 0.6);
+  --glass-bg-strong: rgba(17, 24, 39, 0.85);
+  --glass-bg-soft: rgba(23, 32, 51, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 18px;
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  --accent-cyan: #75d9f7;
+  --accent-purple: #8c7cff;
+  --accent-green: #51e6b4;
+  --border-gradient: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+
+  --income: #51e6b4;
+  --expense: #ff7183;
+  --warn: #fbbf24;
+
+  --text: #f6f8fc;
+  --muted: #8d99ad;
+  --hairline: rgba(255, 255, 255, 0.06);
+  --eyebrow: #8d99ad;
+
+  /* Border jelas (design ref #243047) + bayangan halus. */
+  --border: #243047;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+
+  /* Month chip */
+  --month-chip-bg: #27223f;
+  --month-chip-text: #c9c0ff;
+  --month-chip-border: #443d6b;
+
+  /* Bottom nav */
+  --nav-bg: rgba(10, 14, 23, 0.96);
+
+  /* Body bg */
+  --body-bg: radial-gradient(circle at 50% 0, #202a47 0, #0c111d 38%, #05070c 100%);
+
+  /* Surface kartu */
+  --card-surface: linear-gradient(145deg, rgba(23, 32, 51, 0.95), rgba(13, 19, 31, 0.95));
+
+  /* Icon container */
+  --icon-bg: #1e293b;
+  --icon-bg-deep: #1d2940;
+  --track-bg: #263147;
+}
+
+/* Light juga punya month-chip / nav-bg / card-surface default agar konsisten. */
+:root {
+  --month-chip-bg: var(--surface-2);
+  --month-chip-text: var(--accent-cyan);
+  --month-chip-border: var(--border);
+  --nav-bg: var(--glass-bg-strong);
+  --body-bg:
+    radial-gradient(120% 80% at 15% -10%, var(--bg-glow-1), transparent 60%),
+    radial-gradient(120% 80% at 95% 0%, var(--bg-glow-2), transparent 55%);
+  --card-surface: var(--surface);
+  --icon-bg: var(--surface-2);
+  --icon-bg-deep: var(--surface-2);
+  --track-bg: var(--surface-2);
+}

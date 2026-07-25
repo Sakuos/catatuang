@@ -1,5 +1,5 @@
-import { formatRupiah } from '../lib/format'
-import { cariKategori } from '../lib/categories'
+import { formatRupiah } from '../../lib/format'
+import { cariKategori } from '../../lib/categories'
 
 // Kartu statistik ringkas untuk bulan terpilih.
 // props:
@@ -21,9 +21,7 @@ export default function StatsCard({ transactions, bulan, customCategories = [] }
   for (const t of pengeluaran) {
     if (!terbesar || t.amount > terbesar.amount) terbesar = t
   }
-  const katTerbesar = terbesar
-    ? cariKategori('expense', terbesar.category, customCategories)
-    : null
+  const katTerbesar = terbesar ? cariKategori('expense', terbesar.category, customCategories) : null
 
   return (
     <div className="stats-card">
@@ -38,9 +36,7 @@ export default function StatsCard({ transactions, bulan, customCategories = [] }
           <div className="stat-label">Transaksi</div>
         </div>
         <div className="stat">
-          <div className="stat-value">
-            {terbesar ? formatRupiah(terbesar.amount) : '-'}
-          </div>
+          <div className="stat-value">{terbesar ? formatRupiah(terbesar.amount) : '-'}</div>
           <div className="stat-label">
             {katTerbesar ? `Terbesar (${katTerbesar.label})` : 'Terbesar'}
           </div>

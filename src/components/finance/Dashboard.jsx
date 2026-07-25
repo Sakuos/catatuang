@@ -1,4 +1,4 @@
-import { formatRupiah } from '../lib/format'
+import { formatRupiah } from '../../lib/format'
 
 // Kartu ringkasan: saldo bulan ini, total pemasukan, total pengeluaran.
 // props: income (number), expense (number)

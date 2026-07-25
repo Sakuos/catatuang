@@ -1,0 +1,6 @@
+@media (max-width: 520px) {
+  .fab {
+    right: 20px;
+    transform: none;
+  }
+}
