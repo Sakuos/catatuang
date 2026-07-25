@@ -1,0 +1,11 @@
+node_modules/
+dist/
+android/
+external/
+.claude/
+.tmp-ref/
+package-lock.json
+PRD.md
+index.html
+*.apk
+*.zip

@@ -62,7 +62,7 @@ tema (`'dark'|'light'`), budget (number), goal (number), `dismissedUpdateVersion
 Tanggal `YYYY-MM-DD` lokal; bulan `YYYY-MM`. Mata uang Rupiah `id-ID`.
 
 ### Storage keys (jangan diubah tanpa migrasi)
-`catatuang.transactions`, `catatuang.budget`, `catatuang.goal`, `catatuang.theme`, `catatuang.dismissedUpdate`, `catatuang.customCategories`, `catatuang.recurringPatterns`.
+`catatuang.transactions`, `catatuang.budget`, `catatuang.goal`, `catatuang.goalDeadline`, `catatuang.theme`, `catatuang.dismissedUpdate`, `catatuang.dismissedSwipeHint`, `catatuang.customCategories`, `catatuang.recurringPatterns`.
 
 ## 6. Requirement & acceptance criteria
 

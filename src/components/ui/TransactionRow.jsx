@@ -37,6 +37,12 @@ export default function TransactionRow({
         className="transaction"
         style={{ cursor: 'pointer', textAlign: 'left' }}
         onClick={onClick}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            onClick()
+          }
+        }}
         role="button"
         tabIndex={0}
       >

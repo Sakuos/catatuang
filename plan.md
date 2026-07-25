@@ -9,7 +9,7 @@ Sumber produk: `PRD.md`. Aturan kode & verifikasi: `CLAUDE.md`.
 - `blocked` — menunggu keputusan/dependensi.
 - `done` — selesai & terverifikasi.
 
-## Milestone 0 — Fondasi governance & dokumentasi `active`
+## Milestone 0 — Fondasi governance & dokumentasi `done`
 
 **Deliverable:** `CLAUDE.md`, `PRD.md`, `plan.md`, tautan README, ignore `.claude/` + `konteks.txt`.
 
@@ -19,7 +19,7 @@ Sumber produk: `PRD.md`. Aturan kode & verifikasi: `CLAUDE.md`.
 
 **Verifikasi:** `git diff --check`, link check, `npm run build`, `git status --short` bersih.
 
-## Milestone 1 — Baseline test otomatis `planned`
+## Milestone 1 — Baseline test otomatis `done`
 
 **Deliverable:** tambah Vitest + script `test`/`test:run`. Uji perilaku sekarang sebelum dipindah.
 
@@ -29,7 +29,7 @@ Sumber produk: `PRD.md`. Aturan kode & verifikasi: `CLAUDE.md`.
 
 **Done ketika:** `npm test` lulus dan menjelaskan perilaku saat ini.
 
-## Milestone 2 — Pecah internal persistence `planned`
+## Milestone 2 — Pecah internal persistence `done`
 
 **Deliverable:** pertahankan `src/lib/storage.js` sebagai facade publik; pindahkan internal ke domain fokus (mis. `storage/shared.js`, `settings.js`, `categoryStore.js`, `transactionStore.js`, `recurringStore.js`). Pola usulan, bukan hasil final — tentukan saat mengerjakan.
 
@@ -37,7 +37,7 @@ Sumber produk: `PRD.md`. Aturan kode & verifikasi: `CLAUDE.md`.
 
 **Done ketika:** semua tes Milestone 1 lulus; `npm run build` sukses; export publik `storage.js` tak berubah.
 
-## Milestone 3 — Pecah orkestrasi App `planned`
+## Milestone 3 — Pecah orkestrasi App `done`
 
 **Deliverable:** pindahkan kalkulasi finance murni ke modul (mis. `src/lib/finance.js`); pindahkan state/lifecycle ke hook fokus (mis. `src/hooks/useLedger.js`, `useAppPreferences.js`); `App.jsx` hanya komposisi halaman + pemilih sheet.
 
@@ -45,7 +45,7 @@ Sumber produk: `PRD.md`. Aturan kode & verifikasi: `CLAUDE.md`.
 
 **Done ketika:** tes lulus; smoke UI via `catatuang:verify` setara; `App.jsx` di bawah target lunak.
 
-## Milestone 4 — Pecah CSS `planned`
+## Milestone 4 — Pecah CSS `done`
 
 **Deliverable:** `src/styles.css` jadi entry import-only; pecah per layer (mis. `base`, `layout`, `forms`, `cards`, `transactions`, `responsive`). Pola usulan — tentukan saat mengerjakan.
 

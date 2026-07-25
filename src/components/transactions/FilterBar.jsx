@@ -4,50 +4,55 @@
 //   onSearch(str)          -> ubah teks pencarian
 //   filterType ('all'|'income'|'expense')
 //   onFilterType(v)        -> ubah filter jenis
-const PILIHAN = {
-  all: 'Semua',
-  expense: 'Pengeluaran',
-  income: 'Pemasukan',
-}
+const PILIHAN = [
+  { id: 'all', label: 'Semua' },
+  { id: 'income', label: 'Pemasukan' },
+  { id: 'expense', label: 'Pengeluaran' },
+]
 
 export default function FilterBar({ search, onSearch, filterType, onFilterType }) {
-  const nextFilter = () => {
+  function nextFilter() {
     if (filterType === 'all') return 'expense'
     if (filterType === 'expense') return 'income'
     return 'all'
   }
 
   return (
-    <div className="toolbar">
-      <label className="search">
-        <span aria-hidden="true">⌕</span>
-        <input
-          type="text"
-          placeholder="Cari transaksi"
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
-        />
-        {search && (
+    <div className="filter-bar">
+      <div className="toolbar">
+        <label className="search">
+          <span aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            placeholder="Cari transaksi..."
+            value={search}
+            onChange={(event) => onSearch(event.target.value)}
+          />
+          {search && (
+            <button
+              type="button"
+              className="search-clear"
+              onClick={() => onSearch('')}
+              aria-label="Hapus pencarian"
+            >
+              ✕
+            </button>
+          )}
+        </label>
+      </div>
+      <div className="filter-tabs" aria-label="Filter transaksi">
+        {PILIHAN.map((pilihan) => (
           <button
+            key={pilihan.id}
             type="button"
-            style={{
-              border: 'none',
-              background: 'transparent',
-              color: 'var(--muted)',
-              cursor: 'pointer',
-              padding: '0 4px',
-              fontSize: '14px',
-            }}
-            onClick={() => onSearch('')}
-            aria-label="Hapus"
+            className={filterType === pilihan.id ? 'filter-btn active' : ''}
+            aria-pressed={filterType === pilihan.id}
+            onClick={() => onFilterType(filterType === pilihan.id ? nextFilter() : pilihan.id)}
           >
-            ✕
+            {pilihan.label}
           </button>
-        )}
-      </label>
-      <button type="button" className="filter-btn" onClick={() => onFilterType(nextFilter())}>
-        {PILIHAN[filterType]}
-      </button>
+        ))}
+      </div>
     </div>
   )
 }

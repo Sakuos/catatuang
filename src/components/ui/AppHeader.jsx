@@ -27,7 +27,7 @@ export default function AppHeader({
         )}
         <div className={showLogo ? '' : 'app-header-title'}>
           <p className="eyebrow">{eyebrow}</p>
-          <h1>{showLogo ? 'CatatUang' : title}</h1>
+          <h1>{title}</h1>
         </div>
       </div>
       <div className="header-actions">

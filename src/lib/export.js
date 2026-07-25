@@ -28,7 +28,7 @@ export function buildCSV(transactions) {
 // Parse teks CSV (format hasil export kita) menjadi daftar transaksi.
 // Menangani sel berkutip & escape "" . Baris header & baris rusak dilewati.
 export function parseCSV(text) {
-  const bersih = text.replace(/^﻿/, '') // buang BOM bila ada
+  const bersih = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text // buang BOM bila ada
   const baris = bersih.split(/\r?\n/).filter((b) => b.trim() !== '')
   const hasil = []
 
@@ -103,8 +103,8 @@ export async function exportCSV(transactions) {
     return
   }
 
-  // ﻿ (BOM) agar Excel membaca karakter dengan benar.
-  const csv = '﻿' + buildCSV(transactions)
+  // BOM agar Excel membaca karakter dengan benar.
+  const csv = String.fromCharCode(0xfeff) + buildCSV(transactions)
   const filename = namaFile()
 
   if (Capacitor.isNativePlatform()) {

@@ -1,201 +1,135 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
-import Dashboard from './components/Dashboard'
-import MonthPicker from './components/MonthPicker'
-import TransactionList from './components/TransactionList'
-import TransactionForm from './components/TransactionForm'
-import BudgetCard from './components/BudgetCard'
-import GoalCard from './components/GoalCard'
-import StatsCard from './components/StatsCard'
-import CategoryChart from './components/CategoryChart'
-import FilterBar from './components/FilterBar'
-import UpdateBanner from './components/UpdateBanner'
-import RecurringCard from './components/RecurringCard'
-import RecurringForm from './components/RecurringForm'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import BudgetScreen from './components/screens/BudgetScreen'
+import DashboardScreen from './components/screens/DashboardScreen'
+import ProfileScreen from './components/screens/ProfileScreen'
+import TransactionsScreen from './components/screens/TransactionsScreen'
+import RecurringForm from './components/recurring/RecurringForm'
+import TransactionForm from './components/transactions/TransactionForm'
+import UpdateBanner from './components/shared/UpdateBanner'
+import AppHeader from './components/ui/AppHeader'
+import BottomNavigationItem from './components/ui/BottomNavigationItem'
+import FloatingActionButton from './components/ui/FloatingActionButton'
+import { useAppUpdate } from './hooks/useAppUpdate'
+import { useLedger } from './hooks/useLedger'
+import { usePreferences } from './hooks/usePreferences'
+import { parseCSV } from './lib/export'
 import {
-  getTransactions,
-  addTransaction,
-  updateTransaction,
-  removeTransaction,
-  importTransactions,
-  getBudget,
-  setBudget,
-  getGoal,
-  setGoal,
-  getTheme,
-  setTheme,
-  getDismissedVersion,
-  setDismissedVersion,
-  getCustomCategories,
-  addCustomCategory,
-  removeCustomCategory,
-  getRecurringPatterns,
-  addRecurringPattern,
-  updateRecurringPattern,
-  setRecurringActive,
-  removeRecurringPattern,
-  generateRecurringTransactions,
-} from './lib/storage'
-import { bulanIni, bulanDari } from './lib/format'
-import { cariKategori } from './lib/categories'
-import { exportCSV, parseCSV } from './lib/export'
-import { checkForUpdate } from './lib/update'
+  filterTransactions,
+  getMonthlyTotals,
+  getSavedTotal,
+  getTransactionsForMonth,
+} from './lib/finance'
+import { bulanIni, formatBulan } from './lib/format'
+
+// App adalah shell tab: header + area scroll per layar + bottom nav.
+// State/sheet logic tetap di sini; screen hanya presentasi.
+// Tab: dashboard, transactions, budget, profile.
+const TABS = [
+  { id: 'dashboard', label: 'Dashboard', icon: '⌂' },
+  { id: 'transactions', label: 'Transaksi', icon: '⇅' },
+  { id: 'budget', label: 'Anggaran', icon: '◫' },
+  { id: 'profile', label: 'Profil', icon: '○' },
+]
 
 export default function App() {
-  const [transactions, setTransactions] = useState(() => getTransactions())
-  const [customCategories, setCustomCategories] = useState(() => getCustomCategories())
-  const [recurringPatterns, setRecurringPatterns] = useState(() => getRecurringPatterns())
+  const ledger = useLedger()
+  const preferences = usePreferences()
+  const { update, dismissUpdate } = useAppUpdate()
   const [bulan, setBulan] = useState(() => bulanIni())
-  const [budget, setBudgetState] = useState(() => getBudget())
-  const [goal, setGoalState] = useState(() => getGoal())
-  const [theme, setThemeState] = useState(() => getTheme())
   const [search, setSearch] = useState('')
   const [filterType, setFilterType] = useState('all')
+  const [tab, setTab] = useState('dashboard')
   const [sheet, setSheet] = useState(null)
   const [recurringSheet, setRecurringSheet] = useState(null)
-  const [update, setUpdate] = useState(null)
+  const [budgetMenuSheet, setBudgetMenuSheet] = useState(false)
+  const [budgetEditorSheet, setBudgetEditorSheet] = useState(null) // 'budget' | 'goal' | null
   const fileInputRef = useRef(null)
-
-  function refresh() {
-    setTransactions(getTransactions())
-    setCustomCategories(getCustomCategories())
-    setRecurringPatterns(getRecurringPatterns())
-  }
+  const lastFocusedRef = useRef(null)
+  const activeOverlay = Boolean(sheet || recurringSheet || budgetMenuSheet)
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme
-  }, [theme])
+    if (!activeOverlay) return
 
-  useEffect(() => {
-    generateRecurringTransactions()
-    refresh()
+    lastFocusedRef.current = document.activeElement
+    const dialog = document.querySelector('.sheet[role="dialog"]')
+    const firstControl = dialog?.querySelector('button, input, select, textarea, [tabindex="0"]')
+    firstControl?.focus()
 
-    function handleVisibility() {
-      if (!document.hidden) {
-        generateRecurringTransactions()
-        refresh()
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setSheet(null)
+        setRecurringSheet(null)
+        setBudgetMenuSheet(false)
+        return
+      }
+      if (event.key !== 'Tab' || !dialog) return
+
+      const controls = [
+        ...dialog.querySelectorAll('button, input, select, textarea, [tabindex="0"]'),
+      ].filter((control) => !control.disabled)
+      if (controls.length === 0) return
+      const first = controls[0]
+      const last = controls[controls.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
       }
     }
-    document.addEventListener('visibilitychange', handleVisibility)
-    return () => document.removeEventListener('visibilitychange', handleVisibility)
-  }, [])
 
-  useEffect(() => {
-    checkForUpdate().then((info) => {
-      if (info && info.version !== getDismissedVersion()) setUpdate(info)
-    })
-  }, [])
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      lastFocusedRef.current?.focus?.()
+    }
+  }, [activeOverlay])
 
-  function dismissUpdate() {
-    if (update) setDismissedVersion(update.version)
-    setUpdate(null)
-  }
-
-  const txBulanIni = useMemo(
-    () => transactions.filter((t) => bulanDari(t.date) === bulan),
-    [transactions, bulan]
+  const monthTransactions = useMemo(
+    () => getTransactionsForMonth(ledger.transactions, bulan),
+    [ledger.transactions, bulan]
+  )
+  const { income, expense } = useMemo(
+    () => getMonthlyTotals(monthTransactions),
+    [monthTransactions]
+  )
+  const saved = useMemo(() => getSavedTotal(ledger.transactions), [ledger.transactions])
+  const visibleTransactions = useMemo(
+    () =>
+      filterTransactions(monthTransactions, {
+        type: filterType,
+        search,
+        customCategories: ledger.customCategories,
+      }),
+    [monthTransactions, filterType, search, ledger.customCategories]
   )
 
-  const { income, expense } = useMemo(() => {
-    let income = 0
-    let expense = 0
-    for (const t of txBulanIni) {
-      if (t.type === 'income') income += t.amount
-      else expense += t.amount
-    }
-    return { income, expense }
-  }, [txBulanIni])
-
-  const saved = useMemo(() => {
-    let total = 0
-    for (const t of transactions) total += t.type === 'income' ? t.amount : -t.amount
-    return total
-  }, [transactions])
-
-  const txTampil = useMemo(() => {
-    let list = txBulanIni
-    if (filterType !== 'all') list = list.filter((t) => t.type === filterType)
-    const q = search.trim().toLowerCase()
-    if (q) {
-      list = list.filter((t) => {
-        const kat = cariKategori(t.type, t.category, customCategories)
-        return (t.note || '').toLowerCase().includes(q) || kat.label.toLowerCase().includes(q)
-      })
-    }
-    return list
-  }, [txBulanIni, filterType, search, customCategories])
-
   function handleSubmit(data) {
-    if (sheet?.tx) updateTransaction(sheet.tx.id, data)
-    else addTransaction(data)
-    refresh()
+    ledger.saveTransaction(sheet?.tx, data)
     setSheet(null)
   }
 
-  function handleDelete(id) {
-    removeTransaction(id)
-    refresh()
-  }
-
-  function handleAddCategory(type, label, emoji) {
-    const category = addCustomCategory(type, label, emoji)
-    setCustomCategories(getCustomCategories())
-    return category
-  }
-
-  function handleRemoveCategory(id) {
-    removeCustomCategory(id)
-    setCustomCategories(getCustomCategories())
-  }
-
   function handleSaveRecurring(data) {
-    if (recurringSheet?.pattern) updateRecurringPattern(recurringSheet.pattern.id, data)
-    else addRecurringPattern(data)
-    generateRecurringTransactions()
-    refresh()
+    ledger.saveRecurring(recurringSheet?.pattern, data)
     setRecurringSheet(null)
   }
 
-  function handleToggleRecurring(pattern) {
-    setRecurringActive(pattern.id, !pattern.active)
-    if (!pattern.active) generateRecurringTransactions()
-    refresh()
-  }
-
-  function handleDeleteRecurring(id) {
-    removeRecurringPattern(id)
-    refresh()
-  }
-
-  function handleSaveBudget(nilai) {
-    setBudget(nilai)
-    setBudgetState(nilai)
-  }
-
-  function handleSaveGoal(nilai) {
-    setGoal(nilai)
-    setGoalState(nilai)
-  }
-
-  function toggleTheme() {
-    const baru = theme === 'dark' ? 'light' : 'dark'
-    setTheme(baru)
-    setThemeState(baru)
-  }
-
-  function handleImportFile(e) {
-    const file = e.target.files && e.target.files[0]
+  function handleImportFile(event) {
+    const file = event.target.files?.[0]
     if (!file) return
+
     const reader = new FileReader()
     reader.onload = () => {
       try {
-        const daftar = parseCSV(String(reader.result))
-        if (daftar.length === 0) alert('Tidak ada transaksi yang bisa dibaca dari file itu.')
-        else {
-          const ditambah = importTransactions(daftar)
-          refresh()
+        const transactions = parseCSV(String(reader.result))
+        if (transactions.length === 0) {
+          alert('Tidak ada transaksi yang bisa dibaca dari file itu.')
+        } else {
+          const added = ledger.importList(transactions)
           alert(
-            ditambah > 0
-              ? `${ditambah} transaksi berhasil diimpor.`
+            added > 0
+              ? `${added} transaksi berhasil diimpor.`
               : 'Semua transaksi di file itu sudah ada (tidak ada yang baru).'
           )
         }
@@ -204,76 +138,154 @@ export default function App() {
       }
     }
     reader.readAsText(file)
-    e.target.value = ''
+    event.target.value = ''
+  }
+
+  function triggerImport() {
+    fileInputRef.current?.click()
   }
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <div className="app-brand">
-          <img className="app-logo" src="./favicon.png" alt="Logo CatatUang" />
-          <h1>CatatUang</h1>
-        </div>
-        <button type="button" className="theme-toggle" onClick={toggleTheme} aria-label="Ganti tema">
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-      </header>
-
+    <div className={'app' + (update ? ' has-update' : '')}>
       {update && <UpdateBanner info={update} onDismiss={dismissUpdate} />}
+      <AppHeader
+        title={
+          tab === 'dashboard' ? 'CatatUang' : (TABS.find((t) => t.id === tab)?.label ?? 'CatatUang')
+        }
+        eyebrow={
+          tab === 'dashboard'
+            ? 'Keuangan pribadi'
+            : tab === 'profile'
+              ? 'Pengaturan'
+              : formatBulan(bulan)
+        }
+        showLogo={tab === 'dashboard'}
+        showMonthPicker={tab !== 'profile'}
+        month={bulan}
+        onMonth={setBulan}
+        actions={
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={preferences.toggleTheme}
+            aria-label="Ganti tema"
+          >
+            {preferences.theme === 'dark' ? '☀' : '🌙'}
+          </button>
+        }
+      />
 
       <main className="app-main">
-        <MonthPicker value={bulan} onChange={setBulan} />
-        <Dashboard income={income} expense={expense} />
-        <BudgetCard budget={budget} spent={expense} onSave={handleSaveBudget} />
-        <GoalCard goal={goal} saved={saved} onSave={handleSaveGoal} />
-        <RecurringCard
-          patterns={recurringPatterns}
-          customCategories={customCategories}
-          onAdd={() => setRecurringSheet({})}
-          onEdit={(pattern) => setRecurringSheet({ pattern })}
-          onToggle={handleToggleRecurring}
-          onDelete={handleDeleteRecurring}
-        />
-        <StatsCard transactions={txBulanIni} bulan={bulan} customCategories={customCategories} />
-        <CategoryChart transactions={txBulanIni} customCategories={customCategories} />
-
-        <div className="section-header">
-          <span className="section-title">Riwayat Transaksi</span>
-          <div className="section-actions">
-            <button type="button" className="export-btn" onClick={() => fileInputRef.current?.click()}>
-              📥 Import
-            </button>
-            <button type="button" className="export-btn" onClick={() => exportCSV(transactions)}>
-              📤 Export
-            </button>
-          </div>
-        </div>
-
-        <input ref={fileInputRef} type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={handleImportFile} />
-
-        <FilterBar search={search} onSearch={setSearch} filterType={filterType} onFilterType={setFilterType} />
-        <TransactionList
-          transactions={txTampil}
-          customCategories={customCategories}
-          onEdit={(tx) => setSheet({ tx })}
-          onDelete={handleDelete}
-        />
+        {tab === 'dashboard' && (
+          <DashboardScreen
+            bulan={bulan}
+            income={income}
+            expense={expense}
+            saved={saved}
+            monthTransactions={monthTransactions}
+            preferences={preferences}
+            ledger={ledger}
+            onEditTransaction={(tx) => setSheet({ tx })}
+            onAddRecurring={() => setRecurringSheet({})}
+            onEditRecurring={(pattern) => setRecurringSheet({ pattern })}
+            onLihatSemua={() => setTab('transactions')}
+          />
+        )}
+        {tab === 'transactions' && (
+          <TransactionsScreen
+            bulan={bulan}
+            income={income}
+            expense={expense}
+            search={search}
+            filterType={filterType}
+            visibleTransactions={visibleTransactions}
+            monthTransactions={monthTransactions}
+            customCategories={ledger.customCategories}
+            onSearch={setSearch}
+            onFilterType={setFilterType}
+            onEditTransaction={(tx) => setSheet({ tx })}
+            onDeleteTransaction={ledger.deleteTransaction}
+            swipeHintDismissed={preferences.swipeHintDismissed}
+            onDismissSwipeHint={preferences.dismissSwipeHint}
+          />
+        )}
+        {tab === 'budget' && (
+          <BudgetScreen
+            bulan={bulan}
+            expense={expense}
+            saved={saved}
+            monthTransactions={monthTransactions}
+            preferences={preferences}
+            ledger={ledger}
+            editorSheet={budgetEditorSheet}
+            onCloseEditor={() => setBudgetEditorSheet(null)}
+          />
+        )}
+        {tab === 'profile' && (
+          <ProfileScreen
+            preferences={preferences}
+            ledger={ledger}
+            update={update}
+            dismissUpdate={dismissUpdate}
+            onImportFile={triggerImport}
+            onAddRecurring={() => setRecurringSheet({})}
+            onEditRecurring={(pattern) => setRecurringSheet({ pattern })}
+            onGoToTransactions={() => setTab('transactions')}
+            showUpdate={false}
+          />
+        )}
       </main>
 
-      <button className="fab" onClick={() => setSheet({})} aria-label="Tambah transaksi">+</button>
+      {tab === 'budget' && (
+        <FloatingActionButton
+          onClick={() => setBudgetMenuSheet(true)}
+          label="Tambah anggaran atau target"
+        />
+      )}
+      {(tab === 'dashboard' || tab === 'transactions') && (
+        <FloatingActionButton onClick={() => setSheet({})} label="Tambah transaksi" />
+      )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv,text/csv"
+        style={{ display: 'none' }}
+        onChange={handleImportFile}
+      />
+
+      <nav className="bottom-nav">
+        {TABS.map((t) => (
+          <BottomNavigationItem
+            key={t.id}
+            icon={t.icon}
+            label={t.label}
+            active={tab === t.id}
+            onClick={() => setTab(t.id)}
+          />
+        ))}
+      </nav>
 
       {sheet && (
         <div className="sheet-overlay" onClick={() => setSheet(null)}>
-          <div className="sheet" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="transaction-sheet-title"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="sheet-handle" />
-            <h2 className="sheet-title">{sheet.tx ? 'Edit Transaksi' : 'Tambah Transaksi'}</h2>
+            <h2 className="sheet-title" id="transaction-sheet-title">
+              {sheet.tx ? 'Edit Transaksi' : 'Tambah Transaksi'}
+            </h2>
             <TransactionForm
               initial={sheet.tx}
               onSubmit={handleSubmit}
               onCancel={() => setSheet(null)}
-              customCategories={customCategories}
-              onAddCategory={handleAddCategory}
-              onRemoveCategory={handleRemoveCategory}
+              customCategories={ledger.customCategories}
+              onAddCategory={ledger.addCategory}
+              onRemoveCategory={ledger.deleteCategory}
             />
           </div>
         </div>
@@ -281,24 +293,75 @@ export default function App() {
 
       {recurringSheet && (
         <div className="sheet-overlay" onClick={() => setRecurringSheet(null)}>
-          <div className="sheet" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="recurring-sheet-title"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="sheet-handle" />
-            <h2 className="sheet-title">
+            <h2 className="sheet-title" id="recurring-sheet-title">
               {recurringSheet.pattern ? 'Edit Transaksi Otomatis' : 'Tambah Transaksi Otomatis'}
             </h2>
             <RecurringForm
               initial={recurringSheet.pattern}
               onSubmit={handleSaveRecurring}
               onCancel={() => setRecurringSheet(null)}
-              customCategories={customCategories}
-              onAddCategory={handleAddCategory}
-              onRemoveCategory={handleRemoveCategory}
+              customCategories={ledger.customCategories}
+              onAddCategory={ledger.addCategory}
+              onRemoveCategory={ledger.deleteCategory}
             />
           </div>
         </div>
       )}
-
-      <footer className="app-footer">Data tersimpan di HP kamu · offline</footer>
+      {budgetMenuSheet && (
+        <div className="sheet-overlay" onClick={() => setBudgetMenuSheet(false)}>
+          <div
+            className="sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="budget-menu-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sheet-handle" />
+            <h2 className="sheet-title" id="budget-menu-title">
+              Buat baru
+            </h2>
+            <div
+              className="settings-group"
+              style={{ margin: 0, boxShadow: 'none', border: 0, background: 'none' }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setBudgetMenuSheet(false)
+                  setBudgetEditorSheet('budget')
+                }}
+              >
+                <span className="setting-icon">🎯</span>
+                <div>
+                  <b>Tambah Anggaran</b>
+                  <small>Batasi pengeluaran bulanan</small>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setBudgetMenuSheet(false)
+                  setBudgetEditorSheet('goal')
+                }}
+              >
+                <span className="setting-icon">🏆</span>
+                <div>
+                  <b>Tambah Target</b>
+                  <small>Tentukan target tabungan</small>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -23,7 +23,9 @@ export function kategoriPresetUntuk(type) {
 
 // Normalisasi nama untuk perbandingan dan id kategori kustom.
 export function normalisasiLabelKategori(label) {
-  return String(label || '').trim().replace(/\s+/g, ' ')
+  return String(label || '')
+    .trim()
+    .replace(/\s+/g, ' ')
 }
 
 export function kunciLabelKategori(label) {
@@ -31,12 +33,13 @@ export function kunciLabelKategori(label) {
 }
 
 export function buatIdKategori(label, type) {
-  const slug = normalisasiLabelKategori(label)
-    .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '') || 'kategori'
+  const slug =
+    normalisasiLabelKategori(label)
+      .normalize('NFKD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'kategori'
   return `custom-${type}-${slug}`
 }
 

@@ -15,14 +15,18 @@ Baca hanya yang relevan dengan tugas. Jangan sapu seluruh repo atau output gener
 
 React 18 + Vite 5 + Capacitor 6. Data di `localStorage` WebView. Locale `id-ID`, Rupiah.
 
-- `src/App.jsx` — orkestrasi UI dan state.
-- `src/components/` — komponen UI (Dashboard, TransactionForm, RecurringForm, dll.).
-- `src/lib/storage.js` — **satu-satunya** boundary data (facade). Semua akses `localStorage` lewat sini.
+- `src/App.jsx` — komposisi halaman dan sheet.
+- `src/components/` — komponen per domain: transactions, recurring, categories, finance, shared.
+- `src/hooks/` — state dan lifecycle fokus (`useLedger`, preferences, update).
+- `src/lib/storage.js` — **satu-satunya** boundary data publik (facade). Semua akses `localStorage` lewat sini.
+- `src/lib/storage/` — implementasi persistence internal per domain; UI tidak boleh mengimpor langsung.
 - `src/lib/categories.js` — preset + kategori kustom, pencarian label.
 - `src/lib/format.js` — Rupiah, tanggal, bulan, tanggalBulanan (jepit 29–31).
+- `src/lib/finance.js` — selector dan kalkulasi finance murni.
 - `src/lib/export.js` — CSV build/parse, export Filesystem/Share.
 - `src/lib/update.js` — cek GitHub Release terbaru.
-- `src/styles.css` — tampilan.
+- `src/styles.css` + `src/styles/` — entry CSS dan layer visual.
+- `external/awesome-design-md/` — submodule referensi desain, bukan dependency runtime.
 - `.github/workflows/build-apk.yml` — build/release APK otomatis.
 - `android/` — project Capacitor; hasil build diabaikan, jangan edit file generated.
 
@@ -57,6 +61,6 @@ Target maksimum **500 baris fisik** per file source buatan atau komponen React b
 
 ## Verifikasi minimum
 
-1. Checks terfokus sesuai perubahan (lihat milestone `plan.md`).
+1. `npm run format:check`, `npm run lint`, dan `npm run test:run`.
 2. `npm run build` — harus sukses tanpa error.
 3. Untuk perubahan UI/alur penting: jalankan skill **`catatuang:verify`** (Vite + Chrome headless/CDP, mobile viewport, localStorage, reload, screenshot).

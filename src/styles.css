@@ -1,4 +1,7 @@
 @import './styles/tokens.css';
+@import './styles/cards.css';
+@import './styles/transactions.css';
+@import './styles/ui.css';
 @import './styles/prototype-ui.css';
 @import './styles/overlays.css';
 @import './styles/forms.css';

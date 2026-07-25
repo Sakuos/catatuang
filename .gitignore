@@ -22,6 +22,7 @@ yarn-error.log*
 # Konteks lokal Claude (jangan di-commit)
 /.claude/
 /konteks.txt
+/.tmp-ref/
 
 # Android build (folder android/ tetap di-commit, tapi hasil build-nya diabaikan)
 android/.gradle/

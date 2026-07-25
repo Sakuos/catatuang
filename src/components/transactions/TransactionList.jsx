@@ -3,9 +3,17 @@ import { cariKategori } from '../../lib/categories'
 import { EmptyState } from '../ui/States'
 
 // Daftar transaksi, dikelompokkan per tanggal (terbaru di atas).
-export default function TransactionList({ transactions, onEdit, onDelete, customCategories = [] }) {
+export default function TransactionList({
+  transactions,
+  onEdit,
+  onDelete,
+  customCategories = [],
+  isFiltered = false,
+}) {
   if (transactions.length === 0) {
-    return (
+    return isFiltered ? (
+      <EmptyState title="Transaksi tidak ditemukan." hint="Ubah pencarian atau filter jenis." />
+    ) : (
       <EmptyState title="Belum ada transaksi di bulan ini." hint="Tekan tombol + untuk menambah." />
     )
   }

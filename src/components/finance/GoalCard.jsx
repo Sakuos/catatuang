@@ -24,8 +24,8 @@ export default function GoalCard({ goal, saved = 0, deadline = '', onSave, force
   }, [forceEdit, editor, deadline])
 
   function handleSave() {
-    editor.save()
     onSave(Number(editor.draft) || 0, deadlineDraft)
+    editor.setEditing(false)
     if (wasForceEdit) {
       setWasForceEdit(false)
       onClose?.()

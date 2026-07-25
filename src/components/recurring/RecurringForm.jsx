@@ -43,10 +43,7 @@ export default function RecurringForm({
       return setError('Rentang tanggal tidak valid.')
     setError('')
     setIsSubmitting(true)
-    setTimeout(() => {
-      onSubmit({ type, amount: nominal, category, note, dayOfMonth: day, startDate, endDate })
-      setIsSubmitting(false)
-    }, 10)
+    onSubmit({ type, amount: nominal, category, note, dayOfMonth: day, startDate, endDate })
   }
 
   return (

@@ -6,6 +6,21 @@ export function formatRupiah(amount) {
   return 'Rp ' + n.toLocaleString('id-ID')
 }
 
+// Format angka ringkas untuk label sumbu grafik.
+// 5000000 -> "5 jt", 2500000 -> "2,5 jt", 75000 -> "75 rb", 0 -> "0"
+export function formatRingkas(amount) {
+  const n = Math.abs(Number(amount) || 0)
+  if (n === 0) return '0'
+  if (n >= 1_000_000) return potongDesimal(n / 1_000_000) + ' jt'
+  if (n >= 1_000) return potongDesimal(n / 1_000) + ' rb'
+  return String(Math.round(n))
+}
+
+// Satu desimal, koma gaya id-ID, tanpa ekor ",0".
+function potongDesimal(value) {
+  return (Math.round(value * 10) / 10).toLocaleString('id-ID', { maximumFractionDigits: 1 })
+}
+
 // Format 'YYYY-MM-DD' -> "Senin, 14 Jul 2026"
 export function formatTanggal(isoDate) {
   const d = new Date(isoDate + 'T00:00:00')

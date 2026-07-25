@@ -51,13 +51,17 @@ APK terbaru selalu tersedia di halaman **[Releases](../../releases)**:
 Butuh **Node.js 18+**.
 
 ```bash
-# 1. Install dependencies (cukup sekali)
+# 1. Install dependencies dan submodule referensi desain
 npm install
+git submodule update --init --recursive
 
 # 2. Jalankan mode development (buka http://localhost:5173)
 npm run dev
 
-# 3. Build versi produksi
+# 3. Quality checks
+npm run format:check
+npm run lint
+npm run test:run
 npm run build
 
 # 4. Cek hasil build
@@ -114,17 +118,39 @@ Lalu tekan tombol **Run** di Android Studio (butuh Android Studio + HP/emulator)
 
 ```
 src/
-├── lib/          # logika data & format (storage, format Rupiah, kategori)
-├── components/   # tampilan (Dashboard, form, daftar transaksi, dll.)
-├── App.jsx       # perekat semua bagian
-└── styles.css    # tampilan
-android/          # project Android (dibuat oleh Capacitor)
-.github/workflows/build-apk.yml   # resep build APK otomatis
+├── components/   # komponen per domain: transactions, recurring, finance, shared
+├── hooks/        # state dan lifecycle aplikasi
+├── lib/
+│   ├── storage.js       # facade data publik
+│   ├── storage/         # implementasi persistence per domain
+│   └── *.js             # format, kategori, finance, CSV, update
+├── styles/       # CSS per layer; urutan cascade dari styles.css
+├── App.jsx       # komposisi halaman
+└── styles.css    # entry import CSS
+external/
+└── awesome-design-md/   # submodule referensi desain; bukan dependency runtime
+android/                  # project Android dari Capacitor
+.github/workflows/build-apk.yml
 ```
 
 > **Catatan teknis:** semua akses data lewat `src/lib/storage.js` (facade tunggal).
 > Rencana **sinkron cloud** (Cloudflare) akan menggunakan facade ini, tetapi auth,
 > state async, dan UI konflik kemungkinan menyentuh layer lain — detail di [PRD.md](PRD.md).
+
+### Referensi desain eksternal
+
+Repo `VoltAgent/awesome-design-md` dipasang sebagai Git submodule, bukan disalin ke source app.
+
+```bash
+# Clone baru sekaligus submodule
+git clone --recurse-submodules https://github.com/Sakuos/catatuang.git
+
+# Jika repo sudah pernah di-clone
+git submodule update --init --recursive
+
+# Ambil versi terbaru upstream; review perubahan pointer sebelum commit
+git submodule update --remote external/awesome-design-md
+```
 
 ---
 

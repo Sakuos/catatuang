@@ -30,42 +30,47 @@ export default function TransactionsScreen({
     <div className="screen-content">
       <div className="scroll-area">
         <article className="summary-card">
-        <SummaryMetric label="Pemasukan" value={formatRupiah(income)} tone="income" />
-        <SummaryMetric label="Pengeluaran" value={formatRupiah(expense)} tone="expense" />
-        <SummaryMetric label="Selisih" value={formatRupiah(selisih)} />
-      </article>
+          <SummaryMetric label="Pemasukan" value={formatRupiah(income)} tone="income" />
+          <SummaryMetric label="Pengeluaran" value={formatRupiah(expense)} tone="expense" />
+          <SummaryMetric label="Selisih" value={formatRupiah(selisih)} />
+        </article>
 
-      <FilterBar
-        search={search}
-        onSearch={onSearch}
-        filterType={filterType}
-        onFilterType={onFilterType}
-      />
+        <FilterBar
+          search={search}
+          onSearch={onSearch}
+          filterType={filterType}
+          onFilterType={onFilterType}
+        />
 
-      <div className="date-row">
-        <strong>{formatBulan(bulan)}</strong>
-        <span>{visibleTransactions.length} transaksi</span>
-      </div>
+        <div className="date-row">
+          <strong>{formatBulan(bulan)}</strong>
+          <span>{visibleTransactions.length} transaksi</span>
+        </div>
 
-      <TransactionList
-        transactions={visibleTransactions}
-        customCategories={customCategories}
-        onEdit={onEditTransaction}
-        onDelete={onDeleteTransaction}
-      />
+        <TransactionList
+          transactions={visibleTransactions}
+          customCategories={customCategories}
+          onEdit={onEditTransaction}
+          onDelete={onDeleteTransaction}
+          isFiltered={Boolean(search) || filterType !== 'all'}
+        />
 
-      {tampilkanHint && (
-        <p className="gesture-hint" onClick={onDismissSwipeHint}>
-          Ketuk transaksi untuk edit
-        </p>
-      )}
+        {tampilkanHint && (
+          <button
+            type="button"
+            className="gesture-hint gesture-hint-button"
+            onClick={onDismissSwipeHint}
+          >
+            Ketuk transaksi untuk edit
+          </button>
+        )}
 
-      <StatsCard
-        transactions={monthTransactions}
-        bulan={bulan}
-        customCategories={customCategories}
-      />
-      <CategoryChart transactions={monthTransactions} customCategories={customCategories} />
+        <StatsCard
+          transactions={monthTransactions}
+          bulan={bulan}
+          customCategories={customCategories}
+        />
+        <CategoryChart transactions={monthTransactions} customCategories={customCategories} />
       </div>
     </div>
   )

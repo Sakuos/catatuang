@@ -40,11 +40,7 @@ export default function TransactionForm({
     }
     setError('')
     setIsSubmitting(true)
-    // Beri waktu sejenak agar UI render state loading sebelum flush ke storage (yg bs blocking)
-    setTimeout(() => {
-      onSubmit({ type, amount: nominal, category, note: note.trim(), date })
-      setIsSubmitting(false)
-    }, 10)
+    onSubmit({ type, amount: nominal, category, note: note.trim(), date })
   }
 
   return (

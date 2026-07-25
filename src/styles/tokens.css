@@ -60,20 +60,20 @@
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
-  --bg: #e7ecf4;
-  --bg-glow-1: rgba(124, 58, 237, 0.1);
-  --bg-glow-2: rgba(8, 145, 178, 0.1);
+  --bg: #eaf0f8;
+  --bg-glow-1: rgba(124, 92, 255, 0.14);
+  --bg-glow-2: rgba(20, 184, 214, 0.13);
 
-  --surface: #ffffff;
-  --surface-2: #f4f7fb;
+  --surface: #fdfefe;
+  --surface-2: #f0f5fb;
 
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.72);
-  --glass-bg-soft: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-blur: 16px;
-  --glass-highlight: rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 8px 32px rgba(30, 41, 59, 0.16);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-strong: rgba(248, 251, 255, 0.88);
+  --glass-bg-soft: rgba(239, 246, 253, 0.74);
+  --glass-border: rgba(255, 255, 255, 0.82);
+  --glass-blur: 18px;
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+  --glass-shadow: 0 12px 36px rgba(53, 72, 106, 0.13);
 
   --accent-cyan: #0891b2;
   --accent-purple: #7c3aed;
@@ -84,10 +84,10 @@
   --expense: #e11d48;
   --warn: #d97706;
 
-  --text: #0f172a;
-  --muted: rgba(15, 23, 42, 0.55);
-  --hairline: rgba(15, 23, 42, 0.08);
-  --eyebrow: rgba(15, 23, 42, 0.5);
+  --text: #101a2c;
+  --muted: #66748a;
+  --hairline: rgba(49, 66, 94, 0.1);
+  --eyebrow: #718097;
 
   --radius: 22px;
   --radius-sm: 16px;
@@ -112,9 +112,23 @@
   --touch: 44px;
 
   /* Border solid + bayangan halus (flat dark, bukan glow). */
-  --border: rgba(15, 23, 42, 0.12);
-  --shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.1);
+  --border: rgba(75, 94, 126, 0.18);
+  --shadow: 0 12px 32px rgba(45, 64, 96, 0.13);
+  --shadow-sm: 0 5px 16px rgba(45, 64, 96, 0.09);
+
+  --shell-bg:
+    radial-gradient(circle at 15% 12%, rgba(117, 217, 247, 0.2), transparent 34%),
+    radial-gradient(circle at 92% 30%, rgba(140, 124, 255, 0.16), transparent 31%),
+    linear-gradient(180deg, #f5f8fd, #e9f0f8 68%, #edf4fa);
+  --shell-shadow: 0 24px 70px rgba(36, 52, 82, 0.2);
+  --picker-bg: rgba(248, 251, 255, 0.82);
+  --logo-bg: #ffffff;
+  --logo-text: #218de5;
+  --logo-shadow: 0 8px 22px rgba(47, 77, 119, 0.16);
+  --fab-bg: linear-gradient(145deg, #24bce8, #8c63f2);
+  --fab-text: #ffffff;
+  --fab-shadow: 0 12px 28px rgba(72, 115, 191, 0.28);
+  --overlay-bg: rgba(31, 42, 62, 0.36);
 }
 
 /* ---------- Dark (v2: obsidian deep + neon) ---------- */
@@ -171,6 +185,19 @@
   --icon-bg: #1e293b;
   --icon-bg-deep: #1d2940;
   --track-bg: #263147;
+  --shell-bg:
+    radial-gradient(circle at 22% 18%, rgba(0, 198, 255, 0.08), transparent 34%),
+    radial-gradient(circle at 88% 28%, rgba(140, 92, 255, 0.08), transparent 30%),
+    linear-gradient(180deg, #07111f, #050c17 70%, #081321);
+  --shell-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --picker-bg: rgba(9, 17, 30, 0.72);
+  --logo-bg: #f8fafc;
+  --logo-text: #218de5;
+  --logo-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --fab-bg: linear-gradient(145deg, #27c8ff, #b13dff);
+  --fab-text: #ffffff;
+  --fab-shadow: 0 12px 30px rgba(73, 126, 255, 0.34);
+  --overlay-bg: rgba(5, 6, 10, 0.55);
 }
 
 /* Light juga punya month-chip / nav-bg / card-surface default agar konsisten. */
@@ -186,4 +213,23 @@
   --icon-bg: var(--surface-2);
   --icon-bg-deep: var(--surface-2);
   --track-bg: var(--surface-2);
+  --line: var(--border);
+  --green: var(--income);
+  --red: var(--expense);
+  --cyan: var(--accent-cyan);
+  --accent: var(--accent-purple);
+  --header-h: 152px;
+  --content-max: 430px;
+}
+
+:root[data-theme='dark'] {
+  --month-chip-bg: #27223f;
+  --month-chip-text: #c9c0ff;
+  --month-chip-border: #443d6b;
+  --nav-bg: rgba(10, 14, 23, 0.96);
+  --body-bg: radial-gradient(circle at 50% 0, #202a47 0, #0c111d 38%, #05070c 100%);
+  --card-surface: linear-gradient(145deg, rgba(23, 32, 51, 0.95), rgba(13, 19, 31, 0.95));
+  --icon-bg: #1e293b;
+  --icon-bg-deep: #1d2940;
+  --track-bg: #263147;
 }

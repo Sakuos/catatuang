@@ -35,74 +35,74 @@ export default function DashboardScreen({
     <div className="screen-content">
       <div className="scroll-area">
         <article className="balance-card">
-        <div>
-          <p>Saldo tersedia</p>
-          <h2 className={saldo < 0 ? 'negative' : ''}>{formatRupiah(saldo)}</h2>
-        </div>
-        <span className="month-chip">{formatBulan(bulan)}</span>
-
-        <div className="balance-grid">
           <div>
-            <span>Pemasukan</span>
-            <strong className="income">{'+ ' + formatRupiah(income)}</strong>
+            <p>Saldo tersedia</p>
+            <h2 className={saldo < 0 ? 'negative' : ''}>{formatRupiah(saldo)}</h2>
           </div>
-          <div>
-            <span>Pengeluaran</span>
-            <strong className="expense">{'− ' + formatRupiah(expense)}</strong>
+          <span className="month-chip">{formatBulan(bulan)}</span>
+
+          <div className="balance-grid">
+            <div>
+              <span>Pemasukan</span>
+              <strong className="income">{'+ ' + formatRupiah(income)}</strong>
+            </div>
+            <div>
+              <span>Pengeluaran</span>
+              <strong className="expense">{'− ' + formatRupiah(expense)}</strong>
+            </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <SectionHeader
-        eyebrow="Ringkasan"
-        title="Arus kas minggu ini"
-        action={<span className="cashflow-hint">7 hari terakhir</span>}
-      />
-      <CashFlowChart transactions={monthTransactions} refIso={refIso} />
+        <SectionHeader
+          eyebrow="Ringkasan"
+          title="Arus kas minggu ini"
+          action={<span className="cashflow-hint">7 hari terakhir</span>}
+        />
+        <CashFlowChart transactions={monthTransactions} refIso={refIso} />
 
-      <SectionHeader eyebrow="Ringkasan" title="Keuangan bulan ini" />
+        <SectionHeader eyebrow="Ringkasan" title="Keuangan bulan ini" />
 
-      <BudgetCard budget={preferences.budget} spent={expense} onSave={preferences.saveBudget} />
-      <GoalCard goal={preferences.goal} saved={saved} onSave={preferences.saveGoal} />
+        <BudgetCard budget={preferences.budget} spent={expense} onSave={preferences.saveBudget} />
+        <GoalCard goal={preferences.goal} saved={saved} onSave={preferences.saveGoal} />
 
-      <RecurringCard
-        patterns={ledger.recurringPatterns}
-        customCategories={ledger.customCategories}
-        onAdd={onAddRecurring}
-        onEdit={onEditRecurring}
-        onToggle={ledger.toggleRecurring}
-        onDelete={ledger.deleteRecurring}
-      />
+        <RecurringCard
+          patterns={ledger.recurringPatterns}
+          customCategories={ledger.customCategories}
+          onAdd={onAddRecurring}
+          onEdit={onEditRecurring}
+          onToggle={ledger.toggleRecurring}
+          onDelete={ledger.deleteRecurring}
+        />
 
-      <SectionHeader
-        eyebrow="Aktivitas"
-        title="Transaksi terbaru"
-        action={
-          <button type="button" className="text-btn" onClick={onLihatSemua}>
-            Lihat semua
-          </button>
-        }
-      />
-      {terbaru.length > 0 ? (
-        <div className="transaction-list compact">
-          {terbaru.map((tx) => {
-            const kat = cariKategori(tx.type, tx.category, ledger.customCategories)
-            return (
-              <TransactionRow
-                key={tx.id}
-                icon={kat.emoji}
-                title={kat.label}
-                subtitle={`${tx.note || kat.label} · ${formatTanggalSingkat(tx.date)}`}
-                amount={`${tx.type === 'income' ? '+ ' : '− '}${formatRupiah(tx.amount)}`}
-                type={tx.type}
-                compact
-                onClick={() => onEditTransaction(tx)}
-              />
-            )
-          })}
-        </div>
-      ) : (
-        <p className="gesture-hint">Belum ada transaksi di {formatBulan(bulan)}.</p>
+        <SectionHeader
+          eyebrow="Aktivitas"
+          title="Transaksi terbaru"
+          action={
+            <button type="button" className="text-btn" onClick={onLihatSemua}>
+              Lihat semua
+            </button>
+          }
+        />
+        {terbaru.length > 0 ? (
+          <div className="transaction-list compact">
+            {terbaru.map((tx) => {
+              const kat = cariKategori(tx.type, tx.category, ledger.customCategories)
+              return (
+                <TransactionRow
+                  key={tx.id}
+                  icon={kat.emoji}
+                  title={kat.label}
+                  subtitle={`${tx.note || kat.label} · ${formatTanggalSingkat(tx.date)}`}
+                  amount={`${tx.type === 'income' ? '+ ' : '− '}${formatRupiah(tx.amount)}`}
+                  type={tx.type}
+                  compact
+                  onClick={() => onEditTransaction(tx)}
+                />
+              )
+            })}
+          </div>
+        ) : (
+          <p className="gesture-hint">Belum ada transaksi di {formatBulan(bulan)}.</p>
         )}
       </div>
     </div>
